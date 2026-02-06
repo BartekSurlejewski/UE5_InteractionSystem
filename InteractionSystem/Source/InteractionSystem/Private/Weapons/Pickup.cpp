@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "ShooterPickup.h"
+#include "Pickup.h"
 #include "Components/SceneComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -10,7 +10,7 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 
-AShooterPickup::AShooterPickup()
+APickup::APickup()
 {
  	PrimaryActorTick.bCanEverTick = true;
 
@@ -29,7 +29,7 @@ AShooterPickup::AShooterPickup()
 	SphereCollision->bFillCollisionUnderneathForNavmesh = true;
 
 	// subscribe to the collision overlap on the sphere
-	SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AShooterPickup::OnOverlap);
+	SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnOverlap);
 
 	// create the mesh
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
@@ -38,7 +38,7 @@ AShooterPickup::AShooterPickup()
 	Mesh->SetCollisionProfileName(FName("NoCollision"));
 }
 
-void AShooterPickup::OnConstruction(const FTransform& Transform)
+void APickup::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
@@ -49,7 +49,7 @@ void AShooterPickup::OnConstruction(const FTransform& Transform)
 	}
 }
 
-void AShooterPickup::BeginPlay()
+void APickup::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -60,7 +60,7 @@ void AShooterPickup::BeginPlay()
 	}
 }
 
-void AShooterPickup::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void APickup::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
@@ -68,10 +68,10 @@ void AShooterPickup::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	GetWorld()->GetTimerManager().ClearTimer(RespawnTimer);
 }
 
-void AShooterPickup::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void APickup::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// have we collided against a weapon holder?
-	if (IShooterWeaponHolder* WeaponHolder = Cast<IShooterWeaponHolder>(OtherActor))
+	if (IWeaponHolder* WeaponHolder = Cast<IWeaponHolder>(OtherActor))
 	{
 		WeaponHolder->AddWeaponClass(WeaponClass);
 
@@ -85,11 +85,11 @@ void AShooterPickup::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		SetActorTickEnabled(false);
 
 		// schedule the respawn
-		GetWorld()->GetTimerManager().SetTimer(RespawnTimer, this, &AShooterPickup::RespawnPickup, RespawnTime, false);
+		GetWorld()->GetTimerManager().SetTimer(RespawnTimer, this, &APickup::RespawnPickup, RespawnTime, false);
 	}
 }
 
-void AShooterPickup::RespawnPickup()
+void APickup::RespawnPickup()
 {
 	// unhide this pickup
 	SetActorHiddenInGame(false);
@@ -98,7 +98,7 @@ void AShooterPickup::RespawnPickup()
 	BP_OnRespawn();
 }
 
-void AShooterPickup::FinishRespawn()
+void APickup::FinishRespawn()
 {
 	// enable collision
 	SetActorEnableCollision(true);

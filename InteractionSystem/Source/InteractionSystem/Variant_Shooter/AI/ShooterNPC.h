@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "InteractionSystemCharacter.h"
-#include "ShooterWeaponHolder.h"
+#include "WeaponHolder.h"
 #include "ShooterNPC.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPawnDeathDelegate);
 
-class AShooterWeapon;
+class AWeapon;
 
 /**
  *  A simple AI-controlled shooter game NPC
@@ -17,7 +17,7 @@ class AShooterWeapon;
  *  Holds and manages a weapon
  */
 UCLASS(abstract)
-class INTERACTIONSYSTEM_API AShooterNPC : public AInteractionSystemCharacter, public IShooterWeaponHolder
+class INTERACTIONSYSTEM_API AShooterNPC : public AInteractionSystemCharacter, public IWeaponHolder
 {
 	GENERATED_BODY()
 
@@ -42,11 +42,11 @@ protected:
 	uint8 TeamByte = 1;
 
 	/** Pointer to the equipped weapon */
-	TObjectPtr<AShooterWeapon> Weapon;
+	TObjectPtr<AWeapon> Weapon;
 
 	/** Type of weapon to spawn for this character */
 	UPROPERTY(EditAnywhere, Category="Weapon")
-	TSubclassOf<AShooterWeapon> WeaponClass;
+	TSubclassOf<AWeapon> WeaponClass;
 
 	/** Name of the first person mesh weapon socket */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category ="Weapons")
@@ -107,7 +107,7 @@ public:
 	//~Begin IShooterWeaponHolder interface
 
 	/** Attaches a weapon's meshes to the owner */
-	virtual void AttachWeaponMeshes(AShooterWeapon* Weapon) override;
+	virtual void AttachWeaponMeshes(AWeapon* Weapon) override;
 
 	/** Plays the firing montage for the weapon */
 	virtual void PlayFiringMontage(UAnimMontage* Montage) override;
@@ -122,13 +122,13 @@ public:
 	virtual FVector GetWeaponTargetLocation() override;
 
 	/** Gives a weapon of this class to the owner */
-	virtual void AddWeaponClass(const TSubclassOf<AShooterWeapon>& WeaponClass) override;
+	virtual void AddWeaponClass(const TSubclassOf<AWeapon>& WeaponClass) override;
 
 	/** Activates the passed weapon */
-	virtual void OnWeaponActivated(AShooterWeapon* Weapon) override;
+	virtual void OnWeaponActivated(AWeapon* Weapon) override;
 
 	/** Deactivates the passed weapon */
-	virtual void OnWeaponDeactivated(AShooterWeapon* Weapon) override;
+	virtual void OnWeaponDeactivated(AWeapon* Weapon) override;
 
 	/** Notifies the owner that the weapon cooldown has expired and it's ready to shoot again */
 	virtual void OnSemiWeaponRefire() override;

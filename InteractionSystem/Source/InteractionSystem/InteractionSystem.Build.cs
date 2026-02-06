@@ -25,8 +25,8 @@ public class InteractionSystem : ModuleRules
 
 		PublicIncludePaths.AddRange(new string[] {
 			"InteractionSystem",
-			"InteractionSystem/Variant_Horror",
-			"InteractionSystem/Variant_Horror/UI",
+			"InteractionSystem/Public/InteractionPrototype",
+			"InteractionSystem/Public/Weapons",
 			"InteractionSystem/Variant_Shooter",
 			"InteractionSystem/Variant_Shooter/AI",
 			"InteractionSystem/Variant_Shooter/UI",

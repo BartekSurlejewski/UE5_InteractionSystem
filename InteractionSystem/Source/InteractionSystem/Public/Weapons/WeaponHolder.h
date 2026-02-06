@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "ShooterWeaponHolder.generated.h"
+#include "WeaponHolder.generated.h"
 
-class AShooterWeapon;
+class AWeapon;
 class UAnimMontage;
 
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UShooterWeaponHolder : public UInterface
+class UWeaponHolder : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -20,14 +20,14 @@ class UShooterWeaponHolder : public UInterface
 /**
  *  Common interface for Shooter Game weapon holder classes
  */
-class INTERACTIONSYSTEM_API IShooterWeaponHolder
+class INTERACTIONSYSTEM_API IWeaponHolder
 {
 	GENERATED_BODY()
 
 public:
 
 	/** Attaches a weapon's meshes to the owner */
-	virtual void AttachWeaponMeshes(AShooterWeapon* Weapon) = 0;
+	virtual void AttachWeaponMeshes(AWeapon* Weapon) = 0;
 
 	/** Plays the firing montage for the weapon */
 	virtual void PlayFiringMontage(UAnimMontage* Montage) = 0;
@@ -42,13 +42,13 @@ public:
 	virtual FVector GetWeaponTargetLocation() = 0;
 
 	/** Gives a weapon of this class to the owner */
-	virtual void AddWeaponClass(const TSubclassOf<AShooterWeapon>& WeaponClass) = 0;
+	virtual void AddWeaponClass(const TSubclassOf<AWeapon>& WeaponClass) = 0;
 
 	/** Activates the passed weapon */
-	virtual void OnWeaponActivated(AShooterWeapon* Weapon) = 0;
+	virtual void OnWeaponActivated(AWeapon* Weapon) = 0;
 
 	/** Deactivates the passed weapon */
-	virtual void OnWeaponDeactivated(AShooterWeapon* Weapon) = 0;
+	virtual void OnWeaponDeactivated(AWeapon* Weapon) = 0;
 
 	/** Notifies the owner that the weapon cooldown has expired and it's ready to shoot again */
 	virtual void OnSemiWeaponRefire() = 0;

@@ -2,7 +2,7 @@
 
 
 #include "Variant_Shooter/AI/ShooterNPC.h"
-#include "ShooterWeapon.h"
+#include "Weapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -22,7 +22,7 @@ void AShooterNPC::BeginPlay()
 	SpawnParams.Instigator = this;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	Weapon = GetWorld()->SpawnActor<AShooterWeapon>(WeaponClass, GetActorTransform(), SpawnParams);
+	Weapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, GetActorTransform(), SpawnParams);
 }
 
 void AShooterNPC::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -53,7 +53,7 @@ float AShooterNPC::TakeDamage(float Damage, struct FDamageEvent const& DamageEve
 	return Damage;
 }
 
-void AShooterNPC::AttachWeaponMeshes(AShooterWeapon* WeaponToAttach)
+void AShooterNPC::AttachWeaponMeshes(AWeapon* WeaponToAttach)
 {
 	const FAttachmentTransformRules AttachmentRule(EAttachmentRule::SnapToTarget, false);
 
@@ -123,17 +123,17 @@ FVector AShooterNPC::GetWeaponTargetLocation()
 	return OutHit.bBlockingHit ? OutHit.ImpactPoint : OutHit.TraceEnd;
 }
 
-void AShooterNPC::AddWeaponClass(const TSubclassOf<AShooterWeapon>& InWeaponClass)
+void AShooterNPC::AddWeaponClass(const TSubclassOf<AWeapon>& InWeaponClass)
 {
 	// unused
 }
 
-void AShooterNPC::OnWeaponActivated(AShooterWeapon* InWeapon)
+void AShooterNPC::OnWeaponActivated(AWeapon* InWeapon)
 {
 	// unused
 }
 
-void AShooterNPC::OnWeaponDeactivated(AShooterWeapon* InWeapon)
+void AShooterNPC::OnWeaponDeactivated(AWeapon* InWeapon)
 {
 	// unused
 }

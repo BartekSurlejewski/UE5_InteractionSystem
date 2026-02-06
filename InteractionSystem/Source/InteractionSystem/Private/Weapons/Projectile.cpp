@@ -13,7 +13,7 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 
-AShooterProjectile::AShooterProjectile()
+AProjectile::AProjectile()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -36,7 +36,7 @@ AShooterProjectile::AShooterProjectile()
 	HitDamageType = UDamageType::StaticClass();
 }
 
-void AShooterProjectile::BeginPlay()
+void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
@@ -44,7 +44,7 @@ void AShooterProjectile::BeginPlay()
 	CollisionComponent->IgnoreActorWhenMoving(GetInstigator(), true);
 }
 
-void AShooterProjectile::EndPlay(EEndPlayReason::Type EndPlayReason)
+void AProjectile::EndPlay(EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
@@ -52,7 +52,7 @@ void AShooterProjectile::EndPlay(EEndPlayReason::Type EndPlayReason)
 	GetWorld()->GetTimerManager().ClearTimer(DestructionTimer);
 }
 
-void AShooterProjectile::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+void AProjectile::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// ignore if we've already hit something else
 	if (bHit)
@@ -87,7 +87,7 @@ void AShooterProjectile::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Ot
 	// check if we should schedule deferred destruction of the projectile
 	if (DeferredDestructionTime > 0.0f)
 	{
-		GetWorld()->GetTimerManager().SetTimer(DestructionTimer, this, &AShooterProjectile::OnDeferredDestruction, DeferredDestructionTime, false);
+		GetWorld()->GetTimerManager().SetTimer(DestructionTimer, this, &AProjectile::OnDeferredDestruction, DeferredDestructionTime, false);
 
 	} else {
 
@@ -96,7 +96,7 @@ void AShooterProjectile::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Ot
 	}
 }
 
-void AShooterProjectile::ExplosionCheck(const FVector& ExplosionCenter)
+void AProjectile::ExplosionCheck(const FVector& ExplosionCenter)
 {
 	// do a sphere overlap check look for nearby actors to damage
 	TArray<FOverlapResult> Overlaps;
@@ -139,7 +139,7 @@ void AShooterProjectile::ExplosionCheck(const FVector& ExplosionCenter)
 	}
 }
 
-void AShooterProjectile::ProcessHit(AActor* HitActor, UPrimitiveComponent* HitComp, const FVector& HitLocation, const FVector& HitDirection)
+void AProjectile::ProcessHit(AActor* HitActor, UPrimitiveComponent* HitComp, const FVector& HitLocation, const FVector& HitDirection)
 {
 	// have we hit a character?
 	if (ACharacter* HitCharacter = Cast<ACharacter>(HitActor))
@@ -160,7 +160,7 @@ void AShooterProjectile::ProcessHit(AActor* HitActor, UPrimitiveComponent* HitCo
 	}
 }
 
-void AShooterProjectile::OnDeferredDestruction()
+void AProjectile::OnDeferredDestruction()
 {
 	// destroy this actor
 	Destroy();

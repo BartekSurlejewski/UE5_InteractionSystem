@@ -6,10 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "WeaponHolder.h"
 #include "Animation/AnimInstance.h"
-#include "ShooterWeapon.generated.h"
+#include "Weapon.generated.h"
 
 class IWeaponHolder;
-class AShooterProjectile;
+class AProjectile;
 class USkeletalMeshComponent;
 class UAnimMontage;
 class UAnimInstance;
@@ -21,7 +21,7 @@ class UAnimInstance;
  *  Interacts with the weapon owner through the ShooterWeaponHolder interface
  */
 UCLASS(abstract)
-class INTERACTIONSYSTEM_API AShooterWeapon : public AActor
+class INTERACTIONSYSTEM_API AWeapon : public AActor
 {
 	GENERATED_BODY()
 	
@@ -40,7 +40,7 @@ protected:
 
 	/** Type of projectiles this weapon will shoot */
 	UPROPERTY(EditAnywhere, Category="Ammo")
-	TSubclassOf<AShooterProjectile> ProjectileClass;
+	TSubclassOf<AProjectile> ProjectileClass;
 
 	/** Number of bullets in a magazine */
 	UPROPERTY(EditAnywhere, Category="Ammo", meta = (ClampMin = 0, ClampMax = 100))
@@ -112,7 +112,7 @@ protected:
 public:	
 
 	/** Constructor */
-	AShooterWeapon();
+	AWeapon();
 
 protected:
 	

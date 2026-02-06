@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ShooterProjectile.generated.h"
+#include "Projectile.generated.h"
 
 class USphereComponent;
 class UProjectileMovementComponent;
@@ -15,7 +15,7 @@ class UPrimitiveComponent;
  *  Simple projectile class for a first person shooter game
  */
 UCLASS(abstract)
-class INTERACTIONSYSTEM_API AShooterProjectile : public AActor
+class INTERACTIONSYSTEM_API AProjectile : public AActor
 {
 	GENERATED_BODY()
 	
@@ -78,7 +78,7 @@ protected:
 public:	
 
 	/** Constructor */
-	AShooterProjectile();
+	AProjectile();
 
 protected:
 	

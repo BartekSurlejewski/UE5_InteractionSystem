@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Engine/DataTable.h"
 #include "Engine/StaticMesh.h"
-#include "ShooterPickup.generated.h"
+#include "Pickup.generated.h"
 
 class USphereComponent;
 class UPrimitiveComponent;
@@ -33,7 +33,7 @@ struct FWeaponTableRow : public FTableRowBase
  *  Simple shooter game weapon pickup
  */
 UCLASS(abstract)
-class INTERACTIONSYSTEM_API AShooterPickup : public AActor
+class INTERACTIONSYSTEM_API APickup : public AActor
 {
 	GENERATED_BODY()
 
@@ -64,7 +64,7 @@ protected:
 public:	
 	
 	/** Constructor */
-	AShooterPickup();
+	APickup();
 
 protected:
 

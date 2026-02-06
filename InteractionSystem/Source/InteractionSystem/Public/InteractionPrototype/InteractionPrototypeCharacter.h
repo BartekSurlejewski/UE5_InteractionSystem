@@ -1,40 +1,25 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "InteractionSystemCharacter.h"
 #include "WeaponHolder.h"
-#include "ShooterCharacter.generated.h"
+#include "InteractionPrototypeCharacter.generated.h"
 
 class AWeapon;
 class UInputAction;
 class UInputComponent;
-class UPawnNoiseEmitterComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBulletCountUpdatedDelegate, int32, MagazineSize, int32, Bullets);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDamagedDelegate, float, LifePercent);
-
-/**
- *  A player controllable first person shooter character
- *  Manages a weapon inventory through the IShooterWeaponHolder interface
- *  Manages health and death
- */
-UCLASS(abstract)
-class INTERACTIONSYSTEM_API AShooterCharacter : public AInteractionSystemCharacter, public IWeaponHolder
+UCLASS()
+class INTERACTIONSYSTEM_API AInteractionPrototypeCharacter : public AInteractionSystemCharacter, public IWeaponHolder
 {
 	GENERATED_BODY()
-	
-	/** AI Noise emitter component */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	UPawnNoiseEmitterComponent* PawnNoiseEmitter;
 
 protected:
-
 	/** Fire weapon input action */
 	UPROPERTY(EditAnywhere, Category ="Input")
 	UInputAction* FireAction;
-
 	/** Switch weapon input action */
 	UPROPERTY(EditAnywhere, Category ="Input")
 	UInputAction* SwitchWeaponAction;
@@ -42,25 +27,9 @@ protected:
 	/** Name of the first person mesh weapon socket */
 	UPROPERTY(EditAnywhere, Category ="Weapons")
 	FName FirstPersonWeaponSocket = FName("HandGrip_R");
-
-	/** Name of the third person mesh weapon socket */
-	UPROPERTY(EditAnywhere, Category ="Weapons")
-	FName ThirdPersonWeaponSocket = FName("HandGrip_R");
-
 	/** Max distance to use for aim traces */
 	UPROPERTY(EditAnywhere, Category ="Aim", meta = (ClampMin = 0, ClampMax = 100000, Units = "cm"))
 	float MaxAimDistance = 10000.0f;
-
-	/** Max HP this character can have */
-	UPROPERTY(EditAnywhere, Category="Health")
-	float MaxHP = 500.0f;
-
-	/** Current HP remaining to this character */
-	float CurrentHP = 0.0f;
-
-	/** Team ID for this character*/
-	UPROPERTY(EditAnywhere, Category="Team")
-	uint8 TeamByte = 0;
 
 	/** List of weapons picked up by the character */
 	TArray<AWeapon*> OwnedWeapons;
@@ -68,26 +37,11 @@ protected:
 	/** Weapon currently equipped and ready to shoot with */
 	TObjectPtr<AWeapon> CurrentWeapon;
 
-	UPROPERTY(EditAnywhere, Category ="Destruction", meta = (ClampMin = 0, ClampMax = 10, Units = "s"))
-	float RespawnTime = 5.0f;
-
-	FTimerHandle RespawnTimer;
-
 public:
-
-	/** Bullet count updated delegate */
-	FBulletCountUpdatedDelegate OnBulletCountUpdated;
-
-	/** Damaged delegate */
-	FDamagedDelegate OnDamaged;
-
-public:
-
 	/** Constructor */
-	AShooterCharacter();
+	AInteractionPrototypeCharacter();
 
 protected:
-
 	/** Gameplay initialization */
 	virtual void BeginPlay() override;
 
@@ -95,15 +49,9 @@ protected:
 	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
 	/** Set up input action bindings */
-	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 public:
-
-	/** Handle incoming damage */
-	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-
-public:
-
 	/** Handles start firing input */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void DoStartFiring();
@@ -117,7 +65,6 @@ public:
 	void DoSwitchWeapon();
 
 public:
-
 	//~Begin IShooterWeaponHolder interface
 
 	/** Attaches a weapon's meshes to the owner */
@@ -150,17 +97,6 @@ public:
 	//~End IShooterWeaponHolder interface
 
 protected:
-
 	/** Returns true if the character already owns a weapon of the given class */
 	AWeapon* FindWeaponOfType(TSubclassOf<AWeapon> WeaponClass) const;
-
-	/** Called when this character's HP is depleted */
-	void Die();
-
-	/** Called to allow Blueprint code to react to this character's death */
-	UFUNCTION(BlueprintImplementableEvent, Category="Shooter", meta = (DisplayName = "On Death"))
-	void BP_OnDeath();
-
-	/** Called from the respawn timer to destroy this character and force the PC to respawn */
-	void OnRespawn();
 };
