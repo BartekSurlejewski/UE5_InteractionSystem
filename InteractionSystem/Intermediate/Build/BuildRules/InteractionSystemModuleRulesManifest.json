@@ -1,8 +1,0 @@
-{
-	"SourceFiles": [
-		"D:\\Projekty\\UE5_InteractionSystem\\InteractionSystem\\Source\\InteractionSystem\\InteractionSystem.Build.cs",
-		"D:\\Projekty\\UE5_InteractionSystem\\InteractionSystem\\Source\\InteractionSystem.Target.cs",
-		"D:\\Projekty\\UE5_InteractionSystem\\InteractionSystem\\Source\\InteractionSystemEditor.Target.cs"
-	],
-	"EngineVersion": "5.6.1"
-}
