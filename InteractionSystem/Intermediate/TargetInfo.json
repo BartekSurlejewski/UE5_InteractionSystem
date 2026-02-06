@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "InteractionSystem",
+			"Path": "..\\Source\\InteractionSystem.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "InteractionSystemEditor",
+			"Path": "..\\Source\\InteractionSystemEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}

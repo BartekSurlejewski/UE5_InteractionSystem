@@ -1,0 +1,19 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\intermediate\\build\\win64\\unrealeditor\\inc\\interactionsystem\\uht\\shootergamemode.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\intermediate\\build\\win64\\x64\\interactionsystemeditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.valexpapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\interactionsystem\\definitions.interactionsystem.h",
+            "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\source\\interactionsystem\\variant_shooter\\shootergamemode.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\source\\runtime\\engine\\classes\\gameframework\\gamemodebase.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\source\\runtime\\engine\\classes\\engine\\serverstatreplicator.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\serverstatreplicator.generated.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\gamemodebase.generated.h",
+            "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\intermediate\\build\\win64\\unrealeditor\\inc\\interactionsystem\\uht\\shootergamemode.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

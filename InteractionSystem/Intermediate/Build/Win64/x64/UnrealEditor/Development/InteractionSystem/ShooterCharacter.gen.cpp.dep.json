@@ -1,0 +1,28 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\intermediate\\build\\win64\\unrealeditor\\inc\\interactionsystem\\uht\\shootercharacter.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\intermediate\\build\\win64\\x64\\interactionsystemeditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.valexpapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\interactionsystem\\definitions.interactionsystem.h",
+            "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\source\\interactionsystem\\variant_shooter\\shootercharacter.h",
+            "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\source\\interactionsystem\\interactionsystemcharacter.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\source\\runtime\\engine\\classes\\gameframework\\character.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\source\\runtime\\engine\\classes\\gameframework\\charactermovementreplication.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\source\\runtime\\net\\core\\public\\net\\core\\nettoken\\nettokenexportcontext.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\source\\runtime\\experimental\\iris\\core\\public\\iris\\serialization\\irisobjectreferencepackagemap.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\iriscore\\uht\\irisobjectreferencepackagemap.generated.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\charactermovementreplication.generated.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\source\\runtime\\engine\\classes\\gameframework\\rootmotionsource.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\rootmotionsource.generated.h",
+            "d:\\program files\\epic games\\ue_5.6\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\character.generated.h",
+            "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\intermediate\\build\\win64\\unrealeditor\\inc\\interactionsystem\\uht\\interactionsystemcharacter.generated.h",
+            "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\source\\interactionsystem\\variant_shooter\\weapons\\shooterweaponholder.h",
+            "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\intermediate\\build\\win64\\unrealeditor\\inc\\interactionsystem\\uht\\shooterweaponholder.generated.h",
+            "d:\\projekty\\ue5_interactionsystem\\interactionsystem\\intermediate\\build\\win64\\unrealeditor\\inc\\interactionsystem\\uht\\shootercharacter.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
