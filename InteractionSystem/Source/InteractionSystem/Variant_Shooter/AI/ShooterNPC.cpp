@@ -123,7 +123,7 @@ FVector AShooterNPC::GetWeaponTargetLocation()
 	return OutHit.bBlockingHit ? OutHit.ImpactPoint : OutHit.TraceEnd;
 }
 
-void AShooterNPC::AddWeaponClass(const TSubclassOf<AWeapon>& InWeaponClass)
+void AShooterNPC::PickupWeapon(const TSubclassOf<AWeapon>& InWeaponClass)
 {
 	// unused
 }

@@ -122,7 +122,7 @@ public:
 	virtual FVector GetWeaponTargetLocation() override;
 
 	/** Gives a weapon of this class to the owner */
-	virtual void AddWeaponClass(const TSubclassOf<AWeapon>& WeaponClass) override;
+	virtual void PickupWeapon(const TSubclassOf<AWeapon>& WeaponClass) override;
 
 	/** Activates the passed weapon */
 	virtual void OnWeaponActivated(AWeapon* Weapon) override;

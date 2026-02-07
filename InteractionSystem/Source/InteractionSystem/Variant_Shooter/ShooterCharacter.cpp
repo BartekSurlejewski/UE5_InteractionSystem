@@ -175,7 +175,7 @@ FVector AShooterCharacter::GetWeaponTargetLocation()
 	return OutHit.bBlockingHit ? OutHit.ImpactPoint : OutHit.TraceEnd;
 }
 
-void AShooterCharacter::AddWeaponClass(const TSubclassOf<AWeapon>& WeaponClass)
+void AShooterCharacter::PickupWeapon(const TSubclassOf<AWeapon>& WeaponClass)
 {
 	// do we already own this weapon?
 	AWeapon* OwnedWeapon = FindWeaponOfType(WeaponClass);

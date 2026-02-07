@@ -8,6 +8,7 @@
 #include "Animation/AnimInstance.h"
 #include "Weapon.generated.h"
 
+class AWeaponPickup;
 class IWeaponHolder;
 class AProjectile;
 class USkeletalMeshComponent;
@@ -24,7 +25,7 @@ UCLASS(abstract)
 class INTERACTIONSYSTEM_API AWeapon : public AActor
 {
 	GENERATED_BODY()
-	
+
 	/** First person perspective mesh */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* FirstPersonMesh;
@@ -34,7 +35,6 @@ class INTERACTIONSYSTEM_API AWeapon : public AActor
 	USkeletalMeshComponent* ThirdPersonMesh;
 
 protected:
-
 	/** Cast pointer to the weapon owner */
 	IWeaponHolder* WeaponOwner;
 
@@ -48,7 +48,7 @@ protected:
 
 	/** Number of bullets in the current magazine */
 	int32 CurrentBullets = 0;
-	
+
 	/** Animation montage to play when firing this weapon */
 	UPROPERTY(EditAnywhere, Category="Animation")
 	UAnimMontage* FiringMontage;
@@ -109,13 +109,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Perception")
 	FName ShotNoiseTag = FName("Shot");
 
-public:	
+	UPROPERTY(EditAnywhere, Category="Pickup")
+	TSubclassOf<AWeaponPickup> WeaponPickupClass;
 
+public:
 	/** Constructor */
 	AWeapon();
 
 protected:
-	
 	/** Gameplay initialization */
 	virtual void BeginPlay() override;
 
@@ -123,13 +124,11 @@ protected:
 	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
 protected:
-
 	/** Called when the weapon's owner is destroyed */
 	UFUNCTION()
 	void OnOwnerDestroyed(AActor* DestroyedActor);
 
 public:
-
 	/** Activates this weapon and gets it ready to fire */
 	void ActivateWeapon();
 
@@ -143,7 +142,6 @@ public:
 	void StopFiring();
 
 protected:
-
 	/** Fire the weapon */
 	virtual void Fire();
 
@@ -157,7 +155,6 @@ protected:
 	FTransform CalculateProjectileSpawnTransform(const FVector& TargetLocation) const;
 
 public:
-
 	/** Returns the first person mesh */
 	UFUNCTION(BlueprintPure, Category="Weapon")
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return FirstPersonMesh; };
@@ -165,6 +162,9 @@ public:
 	/** Returns the third person mesh */
 	UFUNCTION(BlueprintPure, Category="Weapon")
 	USkeletalMeshComponent* GetThirdPersonMesh() const { return ThirdPersonMesh; };
+
+	UFUNCTION(BlueprintPure, Category="Pickup")
+	TSubclassOf<AWeaponPickup> GetWeaponPickupClass() const { return WeaponPickupClass; };
 
 	/** Returns the first person anim instance class */
 	const TSubclassOf<UAnimInstance>& GetFirstPersonAnimInstanceClass() const;

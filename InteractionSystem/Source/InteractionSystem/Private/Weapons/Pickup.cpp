@@ -12,7 +12,7 @@
 
 APickup::APickup()
 {
- 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = true;
 
 	// create the root
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
@@ -27,14 +27,6 @@ APickup::APickup()
 	SphereCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
 	SphereCollision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	SphereCollision->bFillCollisionUnderneathForNavmesh = true;
-
-	
-
-	// create the mesh
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	Mesh->SetupAttachment(SphereCollision);
-
-	Mesh->SetCollisionProfileName(FName("NoCollision"));
 }
 
 void APickup::OnPickup(AInteractionPrototypeCharacter* pickingCharacter)
@@ -44,23 +36,11 @@ void APickup::OnPickup(AInteractionPrototypeCharacter* pickingCharacter)
 void APickup::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-
-	// if (FWeaponTableRow* WeaponData = WeaponType.GetRow<FWeaponTableRow>(FString()))
-	// {
-	// 	// set the mesh
-	// 	Mesh->SetStaticMesh(WeaponData->StaticMesh.LoadSynchronous());
-	// }
 }
 
 void APickup::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// if (FWeaponTableRow* WeaponData = WeaponType.GetRow<FWeaponTableRow>(FString()))
-	// {
-	// 	// copy the weapon class
-	// 	WeaponClass = WeaponData->WeaponToSpawn;
-	// }
 }
 
 void APickup::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -71,20 +51,20 @@ void APickup::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	GetWorld()->GetTimerManager().ClearTimer(RespawnTimer);
 }
 
-void APickup::RespawnPickup()
-{
-	// unhide this pickup
-	SetActorHiddenInGame(false);
-
-	// call the BP handler
-	BP_OnRespawn();
-}
-
-void APickup::FinishRespawn()
-{
-	// enable collision
-	SetActorEnableCollision(true);
-
-	// enable tick
-	SetActorTickEnabled(true);
-}
+// void APickup::RespawnPickup()
+// {
+// 	// unhide this pickup
+// 	SetActorHiddenInGame(false);
+//
+// 	// call the BP handler
+// 	BP_OnRespawn();
+// }
+//
+// void APickup::FinishRespawn()
+// {
+// 	// enable collision
+// 	SetActorEnableCollision(true);
+//
+// 	// enable tick
+// 	SetActorTickEnabled(true);
+// }

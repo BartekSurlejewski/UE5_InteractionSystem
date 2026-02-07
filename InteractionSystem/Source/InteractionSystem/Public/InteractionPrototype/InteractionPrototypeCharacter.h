@@ -7,6 +7,7 @@
 #include "WeaponHolder.h"
 #include "InteractionPrototypeCharacter.generated.h"
 
+class AWeaponPickup;
 class AWeapon;
 class UInputAction;
 class UInputComponent;
@@ -30,9 +31,6 @@ protected:
 	/** Max distance to use for aim traces */
 	UPROPERTY(EditAnywhere, Category ="Aim", meta = (ClampMin = 0, ClampMax = 100000, Units = "cm"))
 	float MaxAimDistance = 10000.0f;
-
-	/** List of weapons picked up by the character */
-	TArray<AWeapon*> OwnedWeapons;
 
 	/** Weapon currently equipped and ready to shoot with */
 	TObjectPtr<AWeapon> CurrentWeapon;
@@ -61,8 +59,8 @@ public:
 	void DoStopFiring();
 
 	/** Handles switch weapon input */
-	UFUNCTION(BlueprintCallable, Category="Input")
-	void DoSwitchWeapon();
+	// UFUNCTION(BlueprintCallable, Category="Input")
+	// void DoSwitchWeapon();
 
 public:
 	//~Begin IShooterWeaponHolder interface
@@ -83,7 +81,9 @@ public:
 	virtual FVector GetWeaponTargetLocation() override;
 
 	/** Gives a weapon of this class to the owner */
-	virtual void AddWeaponClass(const TSubclassOf<AWeapon>& WeaponClass) override;
+	virtual void PickupWeapon(const TSubclassOf<AWeapon>& WeaponClass) override;
+	
+	virtual void DropWeapon(const TSubclassOf<AWeaponPickup>& WeaponPickupClass);
 
 	/** Activates the passed weapon */
 	virtual void OnWeaponActivated(AWeapon* Weapon) override;
@@ -98,5 +98,5 @@ public:
 
 protected:
 	/** Returns true if the character already owns a weapon of the given class */
-	AWeapon* FindWeaponOfType(TSubclassOf<AWeapon> WeaponClass) const;
+	// AWeapon* FindWeaponOfType(TSubclassOf<AWeapon> WeaponClass) const;
 };

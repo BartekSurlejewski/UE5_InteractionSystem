@@ -42,7 +42,7 @@ public:
 	virtual FVector GetWeaponTargetLocation() = 0;
 
 	/** Gives a weapon of this class to the owner */
-	virtual void AddWeaponClass(const TSubclassOf<AWeapon>& WeaponClass) = 0;
+	virtual void PickupWeapon(const TSubclassOf<AWeapon>& WeaponClass) = 0;
 
 	/** Activates the passed weapon */
 	virtual void OnWeaponActivated(AWeapon* Weapon) = 0;

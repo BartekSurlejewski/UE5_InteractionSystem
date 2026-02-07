@@ -14,33 +14,12 @@ class UPrimitiveComponent;
 class AWeapon;
 
 /**
- *  Holds information about a type of weapon pickup
- */
-USTRUCT(BlueprintType)
-struct FWeaponTableRow : public FTableRowBase
-{
-	GENERATED_BODY()
-
-	/** Mesh to display on the pickup */
-	UPROPERTY(EditAnywhere)
-	TSoftObjectPtr<UStaticMesh> StaticMesh;
-
-	/** Weapon class to grant on pickup */
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<AWeapon> WeaponToSpawn;
-};
-
-/**
  *  Simple shooter game weapon pickup
  */
 UCLASS(abstract)
 class INTERACTIONSYSTEM_API APickup : public AActor
 {
 	GENERATED_BODY()
-
-	/** Weapon pickup mesh. Its mesh asset is set from the weapon data table */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* Mesh;
 
 protected:
 	/** Collision sphere */
@@ -71,14 +50,14 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 protected:
-	/** Called when it's time to respawn this pickup */
-	void RespawnPickup();
-
-	/** Passes control to Blueprint to animate the pickup respawn. Should end by calling FinishRespawn */
-	UFUNCTION(BlueprintImplementableEvent, Category="Pickup", meta = (DisplayName = "OnRespawn"))
-	void BP_OnRespawn();
-
-	/** Enables this pickup after respawning */
-	UFUNCTION(BlueprintCallable, Category="Pickup")
-	void FinishRespawn();
+	// /** Called when it's time to respawn this pickup */
+	// void RespawnPickup();
+	//
+	// /** Passes control to Blueprint to animate the pickup respawn. Should end by calling FinishRespawn */
+	// UFUNCTION(BlueprintImplementableEvent, Category="Pickup", meta = (DisplayName = "OnRespawn"))
+	// void BP_OnRespawn();
+	//
+	// /** Enables this pickup after respawning */
+	// UFUNCTION(BlueprintCallable, Category="Pickup")
+	// void FinishRespawn();
 };

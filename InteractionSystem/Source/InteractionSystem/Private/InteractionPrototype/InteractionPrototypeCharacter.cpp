@@ -12,6 +12,7 @@
 #include "Engine/World.h"
 #include "Camera/CameraComponent.h"
 #include "TimerManager.h"
+#include "WeaponPickup.h"
 
 AInteractionPrototypeCharacter::AInteractionPrototypeCharacter()
 {
@@ -41,7 +42,7 @@ void AInteractionPrototypeCharacter::SetupPlayerInputComponent(UInputComponent* 
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &AInteractionPrototypeCharacter::DoStopFiring);
 
 		// Switch weapon
-		EnhancedInputComponent->BindAction(SwitchWeaponAction, ETriggerEvent::Triggered, this, &AInteractionPrototypeCharacter::DoSwitchWeapon);
+		// EnhancedInputComponent->BindAction(SwitchWeaponAction, ETriggerEvent::Triggered, this, &AInteractionPrototypeCharacter::DoSwitchWeapon);
 	}
 }
 
@@ -61,35 +62,35 @@ void AInteractionPrototypeCharacter::DoStopFiring()
 	}
 }
 
-void AInteractionPrototypeCharacter::DoSwitchWeapon()
-{
-	if (OwnedWeapons.Num() > 1)
-	{
-		// deactivate the old weapon
-		CurrentWeapon->DeactivateWeapon();
-
-		// find the index of the current weapon in the owned list
-		int32 WeaponIndex = OwnedWeapons.Find(CurrentWeapon);
-
-		// is this the last weapon?
-		if (WeaponIndex == OwnedWeapons.Num() - 1)
-		{
-			// loop back to the beginning of the array
-			WeaponIndex = 0;
-		}
-		else
-		{
-			// select the next weapon index
-			++WeaponIndex;
-		}
-
-		// set the new weapon as current
-		CurrentWeapon = OwnedWeapons[WeaponIndex];
-
-		// activate the new weapon
-		CurrentWeapon->ActivateWeapon();
-	}
-}
+// void AInteractionPrototypeCharacter::DoSwitchWeapon()
+// {
+// 	if (OwnedWeapons.Num() > 1)
+// 	{
+// 		// deactivate the old weapon
+// 		CurrentWeapon->DeactivateWeapon();
+//
+// 		// find the index of the current weapon in the owned list
+// 		int32 WeaponIndex = OwnedWeapons.Find(CurrentWeapon);
+//
+// 		// is this the last weapon?
+// 		if (WeaponIndex == OwnedWeapons.Num() - 1)
+// 		{
+// 			// loop back to the beginning of the array
+// 			WeaponIndex = 0;
+// 		}
+// 		else
+// 		{
+// 			// select the next weapon index
+// 			++WeaponIndex;
+// 		}
+//
+// 		// set the new weapon as current
+// 		CurrentWeapon = OwnedWeapons[WeaponIndex];
+//
+// 		// activate the new weapon
+// 		CurrentWeapon->ActivateWeapon();
+// 	}
+// }
 
 void AInteractionPrototypeCharacter::AttachWeaponMeshes(AWeapon* Weapon)
 {
@@ -135,38 +136,50 @@ FVector AInteractionPrototypeCharacter::GetWeaponTargetLocation()
 	return OutHit.bBlockingHit ? OutHit.ImpactPoint : OutHit.TraceEnd;
 }
 
-void AInteractionPrototypeCharacter::AddWeaponClass(const TSubclassOf<AWeapon>& WeaponClass)
+void AInteractionPrototypeCharacter::PickupWeapon(const TSubclassOf<AWeapon>& WeaponClass)
 {
-	// do we already own this weapon?
-	AWeapon* OwnedWeapon = FindWeaponOfType(WeaponClass);
+	// spawn the new weapon
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.Instigator = this;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.TransformScaleMethod = ESpawnActorScaleMethod::MultiplyWithRoot;
 
-	if (!OwnedWeapon)
+	AWeapon* AddedWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, GetActorTransform(), SpawnParams);
+
+	if (AddedWeapon)
 	{
-		// spawn the new weapon
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.Owner = this;
-		SpawnParams.Instigator = this;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		SpawnParams.TransformScaleMethod = ESpawnActorScaleMethod::MultiplyWithRoot;
-
-		AWeapon* AddedWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, GetActorTransform(), SpawnParams);
-
-		if (AddedWeapon)
+		// if we have an existing weapon, deactivate it
+		if (CurrentWeapon)
 		{
-			// add the weapon to the owned list
-			OwnedWeapons.Add(AddedWeapon);
-
-			// if we have an existing weapon, deactivate it
-			if (CurrentWeapon)
+			if (TSubclassOf<AWeaponPickup> WeaponPickupClass = CurrentWeapon->GetWeaponPickupClass())
 			{
-				CurrentWeapon->DeactivateWeapon();
+				DropWeapon(WeaponPickupClass);
 			}
-
-			// switch to the new weapon
-			CurrentWeapon = AddedWeapon;
-			CurrentWeapon->ActivateWeapon();
+			CurrentWeapon->DeactivateWeapon();
 		}
+
+		// switch to the new weapon
+		CurrentWeapon = AddedWeapon;
+		CurrentWeapon->ActivateWeapon();
 	}
+}
+
+void AInteractionPrototypeCharacter::DropWeapon(const TSubclassOf<AWeaponPickup>& WeaponPickupClass)
+{
+	if (!WeaponPickupClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Weapon Pickup Class is nullptr"));
+		return;
+	}
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * 200.0f;
+	FRotator SpawnRotation = FRotator::ZeroRotator;
+
+	AWeaponPickup* SpawnedWeaponPickup = GetWorld()->SpawnActor<AWeaponPickup>(WeaponPickupClass, SpawnLocation, SpawnRotation, SpawnParams);
 }
 
 void AInteractionPrototypeCharacter::OnWeaponActivated(AWeapon* Weapon)
@@ -190,17 +203,17 @@ void AInteractionPrototypeCharacter::OnSemiWeaponRefire()
 	// unused
 }
 
-AWeapon* AInteractionPrototypeCharacter::FindWeaponOfType(TSubclassOf<AWeapon> WeaponClass) const
-{
-	// check each owned weapon
-	for (AWeapon* Weapon : OwnedWeapons)
-	{
-		if (Weapon->IsA(WeaponClass))
-		{
-			return Weapon;
-		}
-	}
-
-	// weapon not found
-	return nullptr;
-}
+// AWeapon* AInteractionPrototypeCharacter::FindWeaponOfType(TSubclassOf<AWeapon> WeaponClass) const
+// {
+// 	// check each owned weapon
+// 	for (AWeapon* Weapon : OwnedWeapons)
+// 	{
+// 		if (Weapon->IsA(WeaponClass))
+// 		{
+// 			return Weapon;
+// 		}
+// 	}
+//
+// 	// weapon not found
+// 	return nullptr;
+// }
