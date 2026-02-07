@@ -25,7 +25,7 @@ APickup::APickup()
 	SphereCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	SphereCollision->SetCollisionObjectType(ECC_WorldStatic);
 	SphereCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
-	SphereCollision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	SphereCollision->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	SphereCollision->bFillCollisionUnderneathForNavmesh = true;
 }
 
@@ -50,21 +50,3 @@ void APickup::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	// clear the respawn timer
 	GetWorld()->GetTimerManager().ClearTimer(RespawnTimer);
 }
-
-// void APickup::RespawnPickup()
-// {
-// 	// unhide this pickup
-// 	SetActorHiddenInGame(false);
-//
-// 	// call the BP handler
-// 	BP_OnRespawn();
-// }
-//
-// void APickup::FinishRespawn()
-// {
-// 	// enable collision
-// 	SetActorEnableCollision(true);
-//
-// 	// enable tick
-// 	SetActorTickEnabled(true);
-// }

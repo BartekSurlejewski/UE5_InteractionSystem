@@ -7,6 +7,7 @@
 #include "WeaponHolder.h"
 #include "InteractionPrototypeCharacter.generated.h"
 
+class APickup;
 class AWeaponPickup;
 class AWeapon;
 class UInputAction;
@@ -21,9 +22,8 @@ protected:
 	/** Fire weapon input action */
 	UPROPERTY(EditAnywhere, Category ="Input")
 	UInputAction* FireAction;
-	/** Switch weapon input action */
-	UPROPERTY(EditAnywhere, Category ="Input")
-	UInputAction* SwitchWeaponAction;
+	UPROPERTY(EditDefaultsOnly, Category ="Input")
+	UInputAction* InteractAction;
 
 	/** Name of the first person mesh weapon socket */
 	UPROPERTY(EditAnywhere, Category ="Weapons")
@@ -31,6 +31,9 @@ protected:
 	/** Max distance to use for aim traces */
 	UPROPERTY(EditAnywhere, Category ="Aim", meta = (ClampMin = 0, ClampMax = 100000, Units = "cm"))
 	float MaxAimDistance = 10000.0f;
+
+	UPROPERTY(EditAnywhere, Category ="Pickup", meta = (ClampMin = 0, ClampMax = 100000, Units = "cm"))
+	float MaxPickupDistance = 300.0f;
 
 	/** Weapon currently equipped and ready to shoot with */
 	TObjectPtr<AWeapon> CurrentWeapon;
@@ -58,10 +61,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void DoStopFiring();
 
-	/** Handles switch weapon input */
-	// UFUNCTION(BlueprintCallable, Category="Input")
-	// void DoSwitchWeapon();
-
 public:
 	//~Begin IShooterWeaponHolder interface
 
@@ -81,9 +80,9 @@ public:
 	virtual FVector GetWeaponTargetLocation() override;
 
 	/** Gives a weapon of this class to the owner */
-	virtual void PickupWeapon(const TSubclassOf<AWeapon>& WeaponClass) override;
-	
-	virtual void DropWeapon(const TSubclassOf<AWeaponPickup>& WeaponPickupClass);
+	virtual void PickupWeapon(const TSubclassOf<AWeapon>& WeaponClass, const FVector& PickupLocation) override;
+
+	virtual void DropWeapon(const FVector& Location);
 
 	/** Activates the passed weapon */
 	virtual void OnWeaponActivated(AWeapon* Weapon) override;
@@ -97,6 +96,6 @@ public:
 	//~End IShooterWeaponHolder interface
 
 protected:
-	/** Returns true if the character already owns a weapon of the given class */
-	// AWeapon* FindWeaponOfType(TSubclassOf<AWeapon> WeaponClass) const;
+	void DoInteract();
+	APickup* GetLookAtPickup() const;
 };

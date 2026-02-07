@@ -48,16 +48,4 @@ protected:
 
 	/** Gameplay cleanup */
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-protected:
-	// /** Called when it's time to respawn this pickup */
-	// void RespawnPickup();
-	//
-	// /** Passes control to Blueprint to animate the pickup respawn. Should end by calling FinishRespawn */
-	// UFUNCTION(BlueprintImplementableEvent, Category="Pickup", meta = (DisplayName = "OnRespawn"))
-	// void BP_OnRespawn();
-	//
-	// /** Enables this pickup after respawning */
-	// UFUNCTION(BlueprintCallable, Category="Pickup")
-	// void FinishRespawn();
 };

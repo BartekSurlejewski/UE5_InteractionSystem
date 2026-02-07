@@ -6,7 +6,6 @@
 #include "Weapon.h"
 #include "EnhancedInputComponent.h"
 #include "Components/InputComponent.h"
-#include "Components/PawnNoiseEmitterComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/World.h"
@@ -41,8 +40,8 @@ void AInteractionPrototypeCharacter::SetupPlayerInputComponent(UInputComponent* 
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &AInteractionPrototypeCharacter::DoStartFiring);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &AInteractionPrototypeCharacter::DoStopFiring);
 
-		// Switch weapon
-		// EnhancedInputComponent->BindAction(SwitchWeaponAction, ETriggerEvent::Triggered, this, &AInteractionPrototypeCharacter::DoSwitchWeapon);
+		//Interact
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AInteractionPrototypeCharacter::DoInteract);
 	}
 }
 
@@ -61,36 +60,6 @@ void AInteractionPrototypeCharacter::DoStopFiring()
 		CurrentWeapon->StopFiring();
 	}
 }
-
-// void AInteractionPrototypeCharacter::DoSwitchWeapon()
-// {
-// 	if (OwnedWeapons.Num() > 1)
-// 	{
-// 		// deactivate the old weapon
-// 		CurrentWeapon->DeactivateWeapon();
-//
-// 		// find the index of the current weapon in the owned list
-// 		int32 WeaponIndex = OwnedWeapons.Find(CurrentWeapon);
-//
-// 		// is this the last weapon?
-// 		if (WeaponIndex == OwnedWeapons.Num() - 1)
-// 		{
-// 			// loop back to the beginning of the array
-// 			WeaponIndex = 0;
-// 		}
-// 		else
-// 		{
-// 			// select the next weapon index
-// 			++WeaponIndex;
-// 		}
-//
-// 		// set the new weapon as current
-// 		CurrentWeapon = OwnedWeapons[WeaponIndex];
-//
-// 		// activate the new weapon
-// 		CurrentWeapon->ActivateWeapon();
-// 	}
-// }
 
 void AInteractionPrototypeCharacter::AttachWeaponMeshes(AWeapon* Weapon)
 {
@@ -136,7 +105,7 @@ FVector AInteractionPrototypeCharacter::GetWeaponTargetLocation()
 	return OutHit.bBlockingHit ? OutHit.ImpactPoint : OutHit.TraceEnd;
 }
 
-void AInteractionPrototypeCharacter::PickupWeapon(const TSubclassOf<AWeapon>& WeaponClass)
+void AInteractionPrototypeCharacter::PickupWeapon(const TSubclassOf<AWeapon>& WeaponClass, const FVector& PickupLocation)
 {
 	// spawn the new weapon
 	FActorSpawnParameters SpawnParams;
@@ -152,10 +121,7 @@ void AInteractionPrototypeCharacter::PickupWeapon(const TSubclassOf<AWeapon>& We
 		// if we have an existing weapon, deactivate it
 		if (CurrentWeapon)
 		{
-			if (TSubclassOf<AWeaponPickup> WeaponPickupClass = CurrentWeapon->GetWeaponPickupClass())
-			{
-				DropWeapon(WeaponPickupClass);
-			}
+			DropWeapon(PickupLocation);
 			CurrentWeapon->DeactivateWeapon();
 		}
 
@@ -165,21 +131,17 @@ void AInteractionPrototypeCharacter::PickupWeapon(const TSubclassOf<AWeapon>& We
 	}
 }
 
-void AInteractionPrototypeCharacter::DropWeapon(const TSubclassOf<AWeaponPickup>& WeaponPickupClass)
+void AInteractionPrototypeCharacter::DropWeapon(const FVector& Location)
 {
-	if (!WeaponPickupClass)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Weapon Pickup Class is nullptr"));
-		return;
-	}
-	
+	TSubclassOf<AWeaponPickup> WeaponPickupClass = CurrentWeapon->GetWeaponPickupClass();
+
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * 200.0f;
 	FRotator SpawnRotation = FRotator::ZeroRotator;
 
-	AWeaponPickup* SpawnedWeaponPickup = GetWorld()->SpawnActor<AWeaponPickup>(WeaponPickupClass, SpawnLocation, SpawnRotation, SpawnParams);
+	AWeaponPickup* SpawnedWeaponPickup = GetWorld()->SpawnActor<AWeaponPickup>(WeaponPickupClass, Location, SpawnRotation, SpawnParams);
 }
 
 void AInteractionPrototypeCharacter::OnWeaponActivated(AWeapon* Weapon)
@@ -203,17 +165,59 @@ void AInteractionPrototypeCharacter::OnSemiWeaponRefire()
 	// unused
 }
 
-// AWeapon* AInteractionPrototypeCharacter::FindWeaponOfType(TSubclassOf<AWeapon> WeaponClass) const
-// {
-// 	// check each owned weapon
-// 	for (AWeapon* Weapon : OwnedWeapons)
-// 	{
-// 		if (Weapon->IsA(WeaponClass))
-// 		{
-// 			return Weapon;
-// 		}
-// 	}
-//
-// 	// weapon not found
-// 	return nullptr;
-// }
+void AInteractionPrototypeCharacter::DoInteract()
+{
+	APickup* LookAtPickup = GetLookAtPickup();
+	if (!LookAtPickup)
+	{
+		return;
+	}
+
+	LookAtPickup->OnPickup(this);
+}
+
+APickup* AInteractionPrototypeCharacter::GetLookAtPickup() const
+{
+	FHitResult HitResult;
+
+	const FVector Start = GetFirstPersonCameraComponent()->GetComponentLocation();
+	const FVector End = Start + (GetFirstPersonCameraComponent()->GetForwardVector() * MaxPickupDistance);
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
+
+	// Draw debug line
+	DrawDebugLine(
+		GetWorld(),
+		Start,
+		End,
+		bHit ? FColor::Green : FColor::Red, // Green if hit, red if no hit
+		false, // Persistent lines
+		-1.0f, // Lifetime (-1 = one frame)
+		0, // Depth priority
+		0.5f // Thickness
+	);
+
+	// Draw debug sphere at hit location
+	if (bHit)
+	{
+		DrawDebugSphere(
+			GetWorld(),
+			HitResult.ImpactPoint,
+			10.0f, // Radius
+			12, // Segments
+			FColor::Yellow,
+			false,
+			-1.0f
+		);
+	}
+
+	if (bHit)
+	{
+		return Cast<APickup>(HitResult.GetActor());
+	}
+
+	return nullptr;
+}
