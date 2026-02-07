@@ -43,6 +43,11 @@ public:
 	/** Constructor */
 	AInteractionPrototypeCharacter();
 
+	const TObjectPtr<AWeapon>& GetCurrentWeapon() const
+	{
+		return CurrentWeapon;
+	}
+
 protected:
 	/** Gameplay initialization */
 	virtual void BeginPlay() override;
