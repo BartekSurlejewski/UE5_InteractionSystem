@@ -7,6 +7,7 @@
 #include "WeaponHolder.h"
 #include "InteractionPrototypeCharacter.generated.h"
 
+class IInteractable;
 class APickup;
 class AWeaponPickup;
 class AWeapon;
@@ -97,5 +98,5 @@ public:
 
 protected:
 	void DoInteract();
-	APickup* GetLookAtPickup() const;
+	IInteractable* GetLookAtInteractable() const;
 };

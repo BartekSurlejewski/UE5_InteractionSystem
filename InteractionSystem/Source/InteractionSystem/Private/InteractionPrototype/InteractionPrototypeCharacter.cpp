@@ -11,6 +11,7 @@
 #include "Engine/World.h"
 #include "Camera/CameraComponent.h"
 #include "TimerManager.h"
+#include "Interactable.h"
 #include "WeaponPickup.h"
 
 AInteractionPrototypeCharacter::AInteractionPrototypeCharacter()
@@ -167,16 +168,16 @@ void AInteractionPrototypeCharacter::OnSemiWeaponRefire()
 
 void AInteractionPrototypeCharacter::DoInteract()
 {
-	APickup* LookAtPickup = GetLookAtPickup();
-	if (!LookAtPickup)
+	IInteractable* LookAtInteractable = GetLookAtInteractable();
+	if (!LookAtInteractable)
 	{
 		return;
 	}
 
-	LookAtPickup->OnPickup(this);
+	LookAtInteractable->Interact(this);
 }
 
-APickup* AInteractionPrototypeCharacter::GetLookAtPickup() const
+IInteractable* AInteractionPrototypeCharacter::GetLookAtInteractable() const
 {
 	FHitResult HitResult;
 
@@ -216,7 +217,7 @@ APickup* AInteractionPrototypeCharacter::GetLookAtPickup() const
 
 	if (bHit)
 	{
-		return Cast<APickup>(HitResult.GetActor());
+		return Cast<IInteractable>(HitResult.GetActor());
 	}
 
 	return nullptr;

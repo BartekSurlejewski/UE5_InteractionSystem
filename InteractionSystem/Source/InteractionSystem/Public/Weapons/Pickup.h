@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interactable.h"
 #include "GameFramework/Actor.h"
 #include "Engine/DataTable.h"
 #include "Engine/StaticMesh.h"
@@ -17,8 +18,9 @@ class AWeapon;
  *  Simple shooter game weapon pickup
  */
 UCLASS(abstract)
-class INTERACTIONSYSTEM_API APickup : public AActor
+class INTERACTIONSYSTEM_API APickup : public AActor, public IInteractable
 {
+private:
 	GENERATED_BODY()
 
 protected:
@@ -26,18 +28,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USphereComponent* SphereCollision;
 
-	/** Time to wait before respawning this pickup */
-	UPROPERTY(EditAnywhere, Category="Pickup", meta = (ClampMin = 0, ClampMax = 120, Units = "s"))
-	float RespawnTime = 4.0f;
-
-	/** Timer to respawn the pickup */
-	FTimerHandle RespawnTimer;
-
 public:
 	/** Constructor */
 	APickup();
-
-	virtual void OnPickup(AInteractionPrototypeCharacter* pickingCharacter);
+	
+	virtual void Interact(AInteractionPrototypeCharacter* Interactor) override;
+	virtual FText GetInteractionPrompt() const override;
 
 protected:
 	/** Native construction script */
@@ -45,7 +41,4 @@ protected:
 
 	/** Gameplay Initialization*/
 	virtual void BeginPlay() override;
-
-	/** Gameplay cleanup */
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };

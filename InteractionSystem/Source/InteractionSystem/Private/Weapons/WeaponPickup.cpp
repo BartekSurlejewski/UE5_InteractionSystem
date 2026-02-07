@@ -12,11 +12,11 @@ AWeaponPickup::AWeaponPickup()
 	Mesh->SetCollisionProfileName(FName("NoCollision"));
 }
 
-void AWeaponPickup::OnPickup(AInteractionPrototypeCharacter* pickingCharacter)
+void AWeaponPickup::Interact(AInteractionPrototypeCharacter* Interactor)
 {
-	Super::OnPickup(pickingCharacter);
+	Super::Interact(Interactor);
 
-	pickingCharacter->PickupWeapon(WeaponClass, GetActorLocation());
+	Interactor->PickupWeapon(WeaponClass, GetActorLocation());
 
 	// hide this mesh
 	SetActorHiddenInGame(true);
@@ -28,6 +28,11 @@ void AWeaponPickup::OnPickup(AInteractionPrototypeCharacter* pickingCharacter)
 	SetActorTickEnabled(false);
 }
 
+FText AWeaponPickup::GetInteractionPrompt() const
+{
+	return InteractPrompt;
+}
+
 void AWeaponPickup::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
@@ -36,6 +41,7 @@ void AWeaponPickup::OnConstruction(const FTransform& Transform)
 	{
 		// set the mesh
 		Mesh->SetStaticMesh(WeaponData->StaticMesh.LoadSynchronous());
+		InteractPrompt = WeaponData->InteractPrompt;
 	}
 }
 
@@ -47,5 +53,6 @@ void AWeaponPickup::BeginPlay()
 	{
 		// copy the weapon class
 		WeaponClass = WeaponData->WeaponClass;
+		WeaponPickupClass = WeaponData->WeaponPickupClass;
 	}
 }

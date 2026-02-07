@@ -122,6 +122,11 @@ void AWeapon::StopFiring()
 	GetWorld()->GetTimerManager().ClearTimer(RefireTimer);
 }
 
+void AWeapon::ResupplyBullets()
+{
+	SetCurrentBullets(MagazineSize);
+}
+
 void AWeapon::Fire()
 {
 	// ensure the player still wants to fire. They may have let go of the trigger
@@ -160,6 +165,13 @@ void AWeapon::FireCooldownExpired()
 
 void AWeapon::FireProjectile(const FVector& TargetLocation)
 {
+	// if the clip is depleted, we can't shoot
+	if (CurrentBullets <= 0)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Weapon magazine is empty"));
+		return;
+	}
+
 	// get the projectile transform
 	FTransform ProjectileTransform = CalculateProjectileSpawnTransform(TargetLocation);
 
@@ -179,16 +191,7 @@ void AWeapon::FireProjectile(const FVector& TargetLocation)
 	WeaponOwner->AddWeaponRecoil(FiringRecoil);
 
 	// consume bullets
-	--CurrentBullets;
-
-	// if the clip is depleted, reload it
-	if (CurrentBullets <= 0)
-	{
-		CurrentBullets = MagazineSize;
-	}
-
-	// update the weapon HUD
-	WeaponOwner->UpdateWeaponHUD(CurrentBullets, MagazineSize);
+	SetCurrentBullets(CurrentBullets - 1);
 }
 
 FTransform AWeapon::CalculateProjectileSpawnTransform(const FVector& TargetLocation) const
@@ -204,6 +207,14 @@ FTransform AWeapon::CalculateProjectileSpawnTransform(const FVector& TargetLocat
 
 	// return the built transform
 	return FTransform(AimRot, SpawnLoc, FVector::OneVector);
+}
+
+void AWeapon::SetCurrentBullets(int newBulletsCount)
+{
+	CurrentBullets = FMath::Clamp(newBulletsCount, 0, MagazineSize);
+
+	// update the weapon HUD
+	WeaponOwner->UpdateWeaponHUD(CurrentBullets, MagazineSize);
 }
 
 const TSubclassOf<UAnimInstance>& AWeapon::GetFirstPersonAnimInstanceClass() const

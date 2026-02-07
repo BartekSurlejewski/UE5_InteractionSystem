@@ -14,6 +14,9 @@ struct FWeaponTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
+	UPROPERTY(EditAnywhere)
+	FText InteractPrompt;
+
 	/** Mesh to display on the pickup */
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<UStaticMesh> StaticMesh;
@@ -36,6 +39,8 @@ class INTERACTIONSYSTEM_API AWeaponPickup : public APickup
 	UStaticMeshComponent* Mesh;
 
 protected:
+	UPROPERTY(EditAnywhere, Category="Pickup")
+	FText InteractPrompt;
 	/** Data on the type of picked weapon and visuals of this pickup */
 	UPROPERTY(EditAnywhere, Category="Pickup")
 	FDataTableRowHandle WeaponType;
@@ -49,8 +54,10 @@ protected:
 public:
 	AWeaponPickup();
 
-	UFUNCTION()
-	virtual void OnPickup(AInteractionPrototypeCharacter* pickingCharacter) override;
+	//~Begin IInteractable interface
+	virtual void Interact(AInteractionPrototypeCharacter* Interactor) override;
+	virtual FText GetInteractionPrompt() const override;
+	//~End IInteractable interface
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;

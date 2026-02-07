@@ -140,6 +140,8 @@ public:
 
 	/** Stop firing this weapon */
 	void StopFiring();
+	
+	void ResupplyBullets();
 
 protected:
 	/** Fire the weapon */
@@ -153,6 +155,9 @@ protected:
 
 	/** Calculates the spawn transform for projectiles shot by this weapon */
 	FTransform CalculateProjectileSpawnTransform(const FVector& TargetLocation) const;
+	
+	void SetCurrentBullets(int newBulletsCount);
+
 
 public:
 	/** Returns the first person mesh */

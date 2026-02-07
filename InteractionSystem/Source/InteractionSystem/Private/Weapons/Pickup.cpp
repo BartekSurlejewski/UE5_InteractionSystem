@@ -29,8 +29,13 @@ APickup::APickup()
 	SphereCollision->bFillCollisionUnderneathForNavmesh = true;
 }
 
-void APickup::OnPickup(AInteractionPrototypeCharacter* pickingCharacter)
+void APickup::Interact(AInteractionPrototypeCharacter* Interactor)
 {
+}
+
+FText APickup::GetInteractionPrompt() const
+{
+	return FText();
 }
 
 void APickup::OnConstruction(const FTransform& Transform)
@@ -41,12 +46,4 @@ void APickup::OnConstruction(const FTransform& Transform)
 void APickup::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-void APickup::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-
-	// clear the respawn timer
-	GetWorld()->GetTimerManager().ClearTimer(RespawnTimer);
 }
