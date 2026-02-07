@@ -177,7 +177,7 @@ void AInteractionPrototypeCharacter::OnWeaponActivated(AWeapon* Weapon)
 
 	// set the character mesh AnimInstances
 	GetFirstPersonMesh()->SetAnimInstanceClass(Weapon->GetFirstPersonAnimInstanceClass());
-	GetMesh()->SetAnimInstanceClass(Weapon->GetThirdPersonAnimInstanceClass());
+	// GetMesh()->SetAnimInstanceClass(Weapon->GetThirdPersonAnimInstanceClass());
 }
 
 void AInteractionPrototypeCharacter::OnWeaponDeactivated(AWeapon* Weapon)

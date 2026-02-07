@@ -8,6 +8,7 @@
 #include "Engine/StaticMesh.h"
 #include "Pickup.generated.h"
 
+class AInteractionPrototypeCharacter;
 class USphereComponent;
 class UPrimitiveComponent;
 class AWeapon;
@@ -37,23 +38,15 @@ class INTERACTIONSYSTEM_API APickup : public AActor
 {
 	GENERATED_BODY()
 
+	/** Weapon pickup mesh. Its mesh asset is set from the weapon data table */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* Mesh;
+
+protected:
 	/** Collision sphere */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USphereComponent* SphereCollision;
 
-	/** Weapon pickup mesh. Its mesh asset is set from the weapon data table */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* Mesh;
-	
-protected:
-
-	/** Data on the type of picked weapon and visuals of this pickup */
-	UPROPERTY(EditAnywhere, Category="Pickup")
-	FDataTableRowHandle WeaponType;
-
-	/** Type to weapon to grant on pickup. Set from the weapon data table. */
-	TSubclassOf<AWeapon> WeaponClass;
-	
 	/** Time to wait before respawning this pickup */
 	UPROPERTY(EditAnywhere, Category="Pickup", meta = (ClampMin = 0, ClampMax = 120, Units = "s"))
 	float RespawnTime = 4.0f;
@@ -61,13 +54,13 @@ protected:
 	/** Timer to respawn the pickup */
 	FTimerHandle RespawnTimer;
 
-public:	
-	
+public:
 	/** Constructor */
 	APickup();
 
-protected:
+	virtual void OnPickup(AInteractionPrototypeCharacter* pickingCharacter);
 
+protected:
 	/** Native construction script */
 	virtual void OnConstruction(const FTransform& Transform) override;
 
@@ -77,12 +70,7 @@ protected:
 	/** Gameplay cleanup */
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-	/** Handles collision overlap */
-	UFUNCTION()
-	virtual void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
 protected:
-
 	/** Called when it's time to respawn this pickup */
 	void RespawnPickup();
 
