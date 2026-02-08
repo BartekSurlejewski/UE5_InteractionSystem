@@ -16,7 +16,8 @@ class INTERACTIONSYSTEM_API AAmmoPickup : public AActor, public IInteractable
 
 public:
 	//~Begin IInteractable interface
-	virtual void Interact(AInteractionPrototypeCharacter* Interactor) override;
+	virtual void Interact_Implementation(AInteractionPrototypeCharacter* Interactor) override;
 	virtual FText GetInteractionPrompt() const override;
+	virtual void SetHighlighted_Implementation(bool bHighlight) override;
 	//~End IInteractable interface
 };

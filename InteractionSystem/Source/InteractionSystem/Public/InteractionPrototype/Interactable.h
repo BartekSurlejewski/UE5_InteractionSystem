@@ -6,9 +6,7 @@
 #include "Interactable.generated.h"
 
 class AInteractionPrototypeCharacter;
-/**
- * 
- */
+
 UINTERFACE(MinimalAPI)
 class UInteractable : public UInterface
 {
@@ -20,6 +18,13 @@ class INTERACTIONSYSTEM_API IInteractable
 	GENERATED_BODY()
 
 public:
-	virtual void Interact(AInteractionPrototypeCharacter* Interactor) = 0;
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Interaction)
+	void Interact(AInteractionPrototypeCharacter* Interactor);
 	virtual FText GetInteractionPrompt() const = 0;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Interaction)
+	void SetHighlighted(bool bHighlight);
+
+	virtual void Interact_Implementation(AInteractionPrototypeCharacter* Interactor) = 0;
+	virtual void SetHighlighted_Implementation(bool bHighlight) {};
 };

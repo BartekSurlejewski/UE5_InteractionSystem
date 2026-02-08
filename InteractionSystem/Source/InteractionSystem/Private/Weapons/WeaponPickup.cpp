@@ -28,7 +28,7 @@ AWeaponPickup::AWeaponPickup()
 	Mesh->SetCollisionProfileName(FName("NoCollision"));
 }
 
-void AWeaponPickup::Interact(AInteractionPrototypeCharacter* Interactor)
+void AWeaponPickup::Interact_Implementation(AInteractionPrototypeCharacter* Interactor)
 {
 	Interactor->PickupWeapon(WeaponClass, GetActorLocation());
 
@@ -45,6 +45,10 @@ void AWeaponPickup::Interact(AInteractionPrototypeCharacter* Interactor)
 FText AWeaponPickup::GetInteractionPrompt() const
 {
 	return InteractPrompt;
+}
+
+void AWeaponPickup::SetHighlighted_Implementation(bool bHighlight)
+{
 }
 
 void AWeaponPickup::OnConstruction(const FTransform& Transform)

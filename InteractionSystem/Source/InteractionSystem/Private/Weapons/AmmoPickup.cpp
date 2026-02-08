@@ -6,7 +6,7 @@
 #include "InteractionPrototypeCharacter.h"
 #include "Weapon.h"
 
-void AAmmoPickup::Interact(AInteractionPrototypeCharacter* Interactor)
+void AAmmoPickup::Interact_Implementation(AInteractionPrototypeCharacter* Interactor)
 {
 	if (AWeapon* weapon = Interactor->GetCurrentWeapon())
 	{
@@ -17,4 +17,9 @@ void AAmmoPickup::Interact(AInteractionPrototypeCharacter* Interactor)
 FText AAmmoPickup::GetInteractionPrompt() const
 {
 	return FText::FromString("Resupply Ammo");
+}
+
+void AAmmoPickup::SetHighlighted_Implementation(bool bHighlight)
+{
+	IInteractable::SetHighlighted_Implementation(bHighlight);
 }

@@ -32,11 +32,21 @@ void AInteractionPrototypeCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	IInteractable* CurrentLookAtInteractable = GetLookAtInteractable();
+	IInteractable* NewLookAtInteractable = GetLookAtInteractable();
 
-	if (CurrentLookAtInteractable != LookAtInteractable)
+	if (NewLookAtInteractable != LookAtInteractable)
 	{
-		LookAtInteractable = CurrentLookAtInteractable;
+		if (LookAtInteractable)
+		{
+			IInteractable::Execute_SetHighlighted(Cast<UObject>(LookAtInteractable), false);
+		}
+
+		if (NewLookAtInteractable)
+		{
+			IInteractable::Execute_SetHighlighted(Cast<UObject>(NewLookAtInteractable), true);
+		}
+
+		LookAtInteractable = NewLookAtInteractable;
 		OnInteractableLookedAt.Broadcast(Cast<AActor>(LookAtInteractable));
 	}
 }
@@ -188,7 +198,7 @@ void AInteractionPrototypeCharacter::DoInteract()
 		return;
 	}
 
-	LookAtInteractable->Interact(this);
+	IInteractable::Execute_Interact(Cast<UObject>(LookAtInteractable), this);
 }
 
 IInteractable* AInteractionPrototypeCharacter::GetLookAtInteractable() const
