@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Weapons/Pickup.h"
+#include "Interactable.h"
 #include "AmmoPickup.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class INTERACTIONSYSTEM_API AAmmoPickup : public APickup
+class INTERACTIONSYSTEM_API AAmmoPickup : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 

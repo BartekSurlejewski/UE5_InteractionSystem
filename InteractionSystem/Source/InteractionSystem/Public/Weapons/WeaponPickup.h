@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Weapons/Pickup.h"
+#include "Interactable.h"
 #include "WeaponPickup.generated.h"
 
+class USphereComponent;
+class AWeaponPickup;
+class AWeapon;
 /**
  *  Holds information about a type of weapon pickup
  */
@@ -31,7 +34,7 @@ struct FWeaponTableRow : public FTableRowBase
 };
 
 UCLASS(Abstract)
-class INTERACTIONSYSTEM_API AWeaponPickup : public APickup
+class INTERACTIONSYSTEM_API AWeaponPickup : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 	/** Weapon pickup mesh. Its mesh asset is set from the weapon data table */
@@ -39,6 +42,9 @@ class INTERACTIONSYSTEM_API AWeaponPickup : public APickup
 	UStaticMeshComponent* Mesh;
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	USphereComponent* SphereCollision;
+
 	UPROPERTY(EditAnywhere, Category="Pickup")
 	FText InteractPrompt;
 	/** Data on the type of picked weapon and visuals of this pickup */

@@ -149,11 +149,9 @@ void AInteractionPrototypeCharacter::OnWeaponActivated(AWeapon* Weapon)
 {
 	// TODO: Add the OnBulletCountUpdated delegate
 	// update the bullet counter
-	// OnBulletCountUpdated.Broadcast(Weapon->GetMagazineSize(), Weapon->GetBulletCount());
+	OnBulletCountUpdated.Broadcast(Weapon->GetMagazineSize(), Weapon->GetBulletCount());
 
-	// set the character mesh AnimInstances
 	GetFirstPersonMesh()->SetAnimInstanceClass(Weapon->GetFirstPersonAnimInstanceClass());
-	// GetMesh()->SetAnimInstanceClass(Weapon->GetThirdPersonAnimInstanceClass());
 }
 
 void AInteractionPrototypeCharacter::OnWeaponDeactivated(AWeapon* Weapon)

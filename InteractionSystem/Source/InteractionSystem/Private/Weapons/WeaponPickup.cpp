@@ -5,6 +5,22 @@
 
 AWeaponPickup::AWeaponPickup()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
+	// create the root
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+
+	// create the collision sphere
+	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision"));
+	SphereCollision->SetupAttachment(RootComponent);
+
+	SphereCollision->SetRelativeLocation(FVector(0.0f, 0.0f, 84.0f));
+	SphereCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	SphereCollision->SetCollisionObjectType(ECC_WorldStatic);
+	SphereCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
+	SphereCollision->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	SphereCollision->bFillCollisionUnderneathForNavmesh = true;
+	
 	// create the mesh
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(SphereCollision);
@@ -14,8 +30,6 @@ AWeaponPickup::AWeaponPickup()
 
 void AWeaponPickup::Interact(AInteractionPrototypeCharacter* Interactor)
 {
-	Super::Interact(Interactor);
-
 	Interactor->PickupWeapon(WeaponClass, GetActorLocation());
 
 	// hide this mesh

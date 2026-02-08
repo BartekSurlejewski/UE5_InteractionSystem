@@ -14,10 +14,20 @@ class AWeapon;
 class UInputAction;
 class UInputComponent;
 
+// Note: For production, consider using GAS Attribute Sets or MVVM for better scalability
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBulletCountUpdated, int32, CurrentAmmo, int32, MagazineSize);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponEquipped, AWeapon*, CurrentWeapon);
+
 UCLASS()
 class INTERACTIONSYSTEM_API AInteractionPrototypeCharacter : public AInteractionSystemCharacter, public IWeaponHolder
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(BlueprintAssignable, Category = Events)
+	FOnBulletCountUpdated OnBulletCountUpdated;
+	FOnBulletCountUpdated OnWeaponEquipped;
 
 protected:
 	/** Fire weapon input action */

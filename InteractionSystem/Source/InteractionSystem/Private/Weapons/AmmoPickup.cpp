@@ -8,8 +8,6 @@
 
 void AAmmoPickup::Interact(AInteractionPrototypeCharacter* Interactor)
 {
-	Super::Interact(Interactor);
-
 	if (AWeapon* weapon = Interactor->GetCurrentWeapon())
 	{
 		weapon->ResupplyBullets();
