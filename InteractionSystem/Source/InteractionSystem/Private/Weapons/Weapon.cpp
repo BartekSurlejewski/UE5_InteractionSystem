@@ -8,6 +8,7 @@
 #include "WeaponHolder.h"
 #include "Components/SceneComponent.h"
 #include "TimerManager.h"
+#include "WeaponPickup.h"
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/Pawn.h"
@@ -52,6 +53,14 @@ void AWeapon::BeginPlay()
 
 	// attach the meshes to the owner
 	WeaponOwner->AttachWeaponMeshes(this);
+	
+	if (FWeaponTableRow* WeaponData = WeaponType.GetRow<FWeaponTableRow>(FString()))
+	{
+		// copy the weapon class
+		DisplayName = WeaponData->DisplayName;
+		WeaponPickupClass = WeaponData->WeaponPickupClass;
+	}
+	
 }
 
 void AWeapon::EndPlay(EEndPlayReason::Type EndPlayReason)

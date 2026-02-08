@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interactable.h"
 #include "GameFramework/HUD.h"
 #include "InteractionPrototypeHUD.generated.h"
 
+class AWeapon;
 class UInteractionOverlay;
 
 UCLASS()
@@ -18,7 +20,16 @@ private:
 	TSubclassOf<UInteractionOverlay> OverlayClass;
 
 	UInteractionOverlay* InteractionOverlay;
+	FDelegateHandle InteractableLookedAtDelegateHandle;
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	UFUNCTION()
+	void OnInteractableLookedAt(AActor* LookedAtActor);
+	UFUNCTION()
+	void OnBulletCountChanged(int CurrentAmmo, int MagazineSize);
+	UFUNCTION()
+	void OnWeaponEquipped(AWeapon* Weapon);
 };

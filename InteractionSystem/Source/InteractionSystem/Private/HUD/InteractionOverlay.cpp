@@ -2,6 +2,7 @@
 
 #include "HUD/InteractionOverlay.h"
 #include "Components/TextBlock.h"
+#include "Components/SlateWrapperTypes.h"
 
 void UInteractionOverlay::SetInteractionText(const FText& NewInteractionText) const
 {
@@ -15,5 +16,11 @@ void UInteractionOverlay::SetGunNameText(const FText& NewGunNameText) const
 
 void UInteractionOverlay::SetAmmoCountText(const FText& NewAmmoCountText) const
 {
-	GunNameText->SetText(NewAmmoCountText);
+	AmmoCountText->SetText(NewAmmoCountText);
+}
+
+void UInteractionOverlay::SetGunInfoVisibility(ESlateVisibility NewVisibility) const
+{
+	GunNameText->SetVisibility(NewVisibility);
+	AmmoCountText->SetVisibility(NewVisibility);
 }

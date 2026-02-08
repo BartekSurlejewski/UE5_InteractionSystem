@@ -19,6 +19,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBulletCountUpdated, int32, Curre
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponEquipped, AWeapon*, CurrentWeapon);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableLookedAt, AActor*, LookedAtActor);
+
 UCLASS()
 class INTERACTIONSYSTEM_API AInteractionPrototypeCharacter : public AInteractionSystemCharacter, public IWeaponHolder
 {
@@ -27,7 +29,8 @@ class INTERACTIONSYSTEM_API AInteractionPrototypeCharacter : public AInteraction
 public:
 	UPROPERTY(BlueprintAssignable, Category = Events)
 	FOnBulletCountUpdated OnBulletCountUpdated;
-	FOnBulletCountUpdated OnWeaponEquipped;
+	FOnWeaponEquipped OnWeaponEquipped;
+	FOnInteractableLookedAt OnInteractableLookedAt;
 
 protected:
 	/** Fire weapon input action */
@@ -35,6 +38,8 @@ protected:
 	UInputAction* FireAction;
 	UPROPERTY(EditDefaultsOnly, Category ="Input")
 	UInputAction* InteractAction;
+
+	IInteractable* LookAtInteractable;
 
 	/** Name of the first person mesh weapon socket */
 	UPROPERTY(EditAnywhere, Category ="Weapons")
@@ -61,6 +66,8 @@ public:
 protected:
 	/** Gameplay initialization */
 	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
 
 	/** Gameplay cleanup */
 	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;

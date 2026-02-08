@@ -18,6 +18,9 @@ struct FWeaponTableRow : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
+	FText DisplayName;
+
+	UPROPERTY(EditAnywhere)
 	FText InteractPrompt;
 
 	/** Mesh to display on the pickup */

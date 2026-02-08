@@ -20,7 +20,7 @@ AWeaponPickup::AWeaponPickup()
 	SphereCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
 	SphereCollision->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	SphereCollision->bFillCollisionUnderneathForNavmesh = true;
-	
+
 	// create the mesh
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(SphereCollision);
@@ -55,7 +55,6 @@ void AWeaponPickup::OnConstruction(const FTransform& Transform)
 	{
 		// set the mesh
 		Mesh->SetStaticMesh(WeaponData->StaticMesh.LoadSynchronous());
-		InteractPrompt = WeaponData->InteractPrompt;
 	}
 }
 
@@ -66,6 +65,7 @@ void AWeaponPickup::BeginPlay()
 	if (FWeaponTableRow* WeaponData = WeaponType.GetRow<FWeaponTableRow>(FString()))
 	{
 		// copy the weapon class
+		InteractPrompt = WeaponData->InteractPrompt;
 		WeaponClass = WeaponData->WeaponClass;
 		WeaponPickupClass = WeaponData->WeaponPickupClass;
 	}

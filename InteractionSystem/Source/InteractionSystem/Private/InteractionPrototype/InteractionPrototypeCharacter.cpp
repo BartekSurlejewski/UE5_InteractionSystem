@@ -23,6 +23,22 @@ AInteractionPrototypeCharacter::AInteractionPrototypeCharacter()
 void AInteractionPrototypeCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	OnInteractableLookedAt.Broadcast(Cast<AActor>(LookAtInteractable));
+	OnWeaponEquipped.Broadcast(CurrentWeapon);
+}
+
+void AInteractionPrototypeCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	IInteractable* CurrentLookAtInteractable = GetLookAtInteractable();
+
+	if (CurrentLookAtInteractable != LookAtInteractable)
+	{
+		LookAtInteractable = CurrentLookAtInteractable;
+		OnInteractableLookedAt.Broadcast(Cast<AActor>(LookAtInteractable));
+	}
 }
 
 void AInteractionPrototypeCharacter::EndPlay(EEndPlayReason::Type EndPlayReason)
@@ -86,7 +102,7 @@ void AInteractionPrototypeCharacter::AddWeaponRecoil(float Recoil)
 
 void AInteractionPrototypeCharacter::UpdateWeaponHUD(int32 CurrentAmmo, int32 MagazineSize)
 {
-	// OnBulletCountUpdated.Broadcast(MagazineSize, CurrentAmmo);
+	OnBulletCountUpdated.Broadcast(CurrentAmmo, MagazineSize);
 }
 
 FVector AInteractionPrototypeCharacter::GetWeaponTargetLocation()
@@ -149,6 +165,7 @@ void AInteractionPrototypeCharacter::OnWeaponActivated(AWeapon* Weapon)
 {
 	// TODO: Add the OnBulletCountUpdated delegate
 	// update the bullet counter
+	OnWeaponEquipped.Broadcast(CurrentWeapon);
 	OnBulletCountUpdated.Broadcast(Weapon->GetMagazineSize(), Weapon->GetBulletCount());
 
 	GetFirstPersonMesh()->SetAnimInstanceClass(Weapon->GetFirstPersonAnimInstanceClass());
@@ -166,7 +183,6 @@ void AInteractionPrototypeCharacter::OnSemiWeaponRefire()
 
 void AInteractionPrototypeCharacter::DoInteract()
 {
-	IInteractable* LookAtInteractable = GetLookAtInteractable();
 	if (!LookAtInteractable)
 	{
 		return;
@@ -186,32 +202,6 @@ IInteractable* AInteractionPrototypeCharacter::GetLookAtInteractable() const
 	QueryParams.AddIgnoredActor(this);
 
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
-
-	// Draw debug line
-	DrawDebugLine(
-		GetWorld(),
-		Start,
-		End,
-		bHit ? FColor::Green : FColor::Red, // Green if hit, red if no hit
-		false, // Persistent lines
-		-1.0f, // Lifetime (-1 = one frame)
-		0, // Depth priority
-		0.5f // Thickness
-	);
-
-	// Draw debug sphere at hit location
-	if (bHit)
-	{
-		DrawDebugSphere(
-			GetWorld(),
-			HitResult.ImpactPoint,
-			10.0f, // Radius
-			12, // Segments
-			FColor::Yellow,
-			false,
-			-1.0f
-		);
-	}
 
 	if (bHit)
 	{

@@ -6,9 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "InteractionOverlay.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class INTERACTIONSYSTEM_API UInteractionOverlay : public UUserWidget
 {
@@ -18,6 +15,7 @@ public:
 	void SetInteractionText(const FText& NewInteractionText) const;
 	void SetGunNameText(const FText& NewGunNameText) const;
 	void SetAmmoCountText(const FText& NewAmmoCountText) const;
+	void SetGunInfoVisibility(ESlateVisibility NewVisibility) const;
 
 private:
 	UPROPERTY(meta = (BindWidget))

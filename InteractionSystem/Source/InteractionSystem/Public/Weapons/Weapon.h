@@ -109,8 +109,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Perception")
 	FName ShotNoiseTag = FName("Shot");
 
-	UPROPERTY(EditAnywhere, Category="Pickup")
+	UPROPERTY(EditAnywhere, Category="Weapon Data")
+	FDataTableRowHandle WeaponType;
+
+	UPROPERTY(EditAnywhere, Category="Weapon Data")
 	TSubclassOf<AWeaponPickup> WeaponPickupClass;
+
+	UPROPERTY(EditAnywhere, Category="Weapon Data")
+	FText DisplayName;
 
 public:
 	/** Constructor */
@@ -140,7 +146,7 @@ public:
 
 	/** Stop firing this weapon */
 	void StopFiring();
-	
+
 	void ResupplyBullets();
 
 protected:
@@ -155,9 +161,8 @@ protected:
 
 	/** Calculates the spawn transform for projectiles shot by this weapon */
 	FTransform CalculateProjectileSpawnTransform(const FVector& TargetLocation) const;
-	
-	void SetCurrentBullets(int newBulletsCount);
 
+	void SetCurrentBullets(int newBulletsCount);
 
 public:
 	/** Returns the first person mesh */
@@ -182,4 +187,6 @@ public:
 
 	/** Returns the current bullet count */
 	int32 GetBulletCount() const { return CurrentBullets; }
+
+	FText GetDisplayName() const { return DisplayName; }
 };
