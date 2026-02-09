@@ -6,6 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Interactable.h"
 #include "InteractionPrototypeCharacter.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 
 UInteractionActorComponent::UInteractionActorComponent()
@@ -13,7 +14,6 @@ UInteractionActorComponent::UInteractionActorComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-// Called when the game starts
 void UInteractionActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -61,7 +61,6 @@ FKey UInteractionActorComponent::GetKeyForInputAction(UInputAction* InputAction)
 }
 
 
-// Called every frame
 void UInteractionActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);

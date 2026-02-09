@@ -6,7 +6,6 @@
 #include "InteractionSystemPlayerController.h"
 #include "InteractionPrototypePC.generated.h"
 
-// class UShooterBulletCounterUI;
 
 UCLASS(Abstract)
 class INTERACTIONSYSTEM_API AInteractionPrototypePC : public APlayerController
@@ -14,14 +13,11 @@ class INTERACTIONSYSTEM_API AInteractionPrototypePC : public APlayerController
 	GENERATED_BODY()
 
 protected:
-	/** Input mapping contexts for this player */
 	UPROPERTY(EditAnywhere, Category="Input|Input Mappings")
 	TArray<UInputMappingContext*> DefaultMappingContexts;
 
 protected:
-	/** Gameplay Initialization */
 	virtual void BeginPlay() override;
 
-	/** Initialize input bindings */
 	virtual void SetupInputComponent() override;
 };

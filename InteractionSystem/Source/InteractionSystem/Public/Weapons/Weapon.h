@@ -160,8 +160,6 @@ protected:
 	FTransform CalculateProjectileSpawnTransform(const FVector& TargetLocation) const;
 
 	void SetCurrentBullets(int newBulletsCount);
-	
-	void InitializeWeaponData();
 
 public:
 	/** Returns the first person mesh */

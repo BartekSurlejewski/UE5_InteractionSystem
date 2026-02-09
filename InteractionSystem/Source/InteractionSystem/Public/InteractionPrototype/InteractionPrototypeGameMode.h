@@ -6,9 +6,6 @@
 #include "InteractionSystemGameMode.h"
 #include "InteractionPrototypeGameMode.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class INTERACTIONSYSTEM_API AInteractionPrototypeGameMode : public AInteractionSystemGameMode
 {

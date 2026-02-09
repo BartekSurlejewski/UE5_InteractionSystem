@@ -60,23 +60,12 @@ void AWeapon::BeginPlay()
 
 	// attach the meshes to the owner
 	WeaponOwner->AttachWeaponMeshes(this);
-
-	// if (FWeaponTableRow* WeaponData = WeaponType.GetRow<FWeaponTableRow>(FString()))
-	// {
-	// 	// copy the weapon class
-	// 	DisplayName = WeaponData->DisplayName;
-	// 	WeaponPickupClass = WeaponData->WeaponPickupClass;
-	// 	FirstPersonMesh->SetSkeletalMesh(WeaponData->SkeletalMesh.LoadSynchronous());
-	// 	ProjectileClass = WeaponData->ProjectileClass;
-	// 	MagazineSize = WeaponData->MagazineSize;
-	// }
 }
 
 void AWeapon::EndPlay(EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	// clear the refire timer
 	GetWorld()->GetTimerManager().ClearTimer(RefireTimer);
 }
 
@@ -233,11 +222,6 @@ void AWeapon::SetCurrentBullets(int newBulletsCount)
 
 	// update the weapon HUD
 	WeaponOwner->UpdateWeaponHUD(CurrentBullets, MagazineSize);
-}
-
-void AWeapon::InitializeWeaponData()
-{
-	
 }
 
 const TSubclassOf<UAnimInstance>& AWeapon::GetFirstPersonAnimInstanceClass() const
