@@ -6,9 +6,6 @@
 #include "Interactable.h"
 #include "AmmoPickup.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class INTERACTIONSYSTEM_API AAmmoPickup : public AActor, public IInteractable
 {
