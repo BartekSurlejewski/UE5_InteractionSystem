@@ -7,6 +7,8 @@
 #include "Components/ActorComponent.h"
 #include "InteractionActorComponent.generated.h"
 
+class UInputAction;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableLookedAt, AActor*, LookedAtActor);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -21,11 +23,24 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	FKey GetKeyForInputAction(UInputAction* InputAction) const;
 
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	AActor* GetLookAtInteractableActor() const;
 	void Interact();
+
+	FKey GetCurrentInteractKey() const;
+
+	void SetInteractInputAction(UInputAction* NewInteractInputAction)
+	{
+		if (NewInteractInputAction != InteractInputAction)
+		{
+			InteractInputKey = GetKeyForInputAction(NewInteractInputAction);
+		}
+
+		InteractInputAction = NewInteractInputAction;
+	}
 
 private:
 	UPROPERTY(EditAnywhere, Category ="Pickup", meta = (ClampMin = 0, ClampMax = 100000, Units = "cm"))
@@ -34,4 +49,6 @@ private:
 	UPROPERTY()
 	UCameraComponent* CachedCamera;
 	AActor* LookAtInteractableActor;
+	UInputAction* InteractInputAction;
+	FKey InteractInputKey;
 };

@@ -11,7 +11,6 @@
 #include "Engine/World.h"
 #include "Camera/CameraComponent.h"
 #include "TimerManager.h"
-#include "Interactable.h"
 #include "InteractionActorComponent.h"
 #include "WeaponPickup.h"
 
@@ -48,6 +47,8 @@ void AInteractionPrototypeCharacter::SetupPlayerInputComponent(UInputComponent* 
 		//Interact
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AInteractionPrototypeCharacter::DoInteract);
 	}
+
+	InteractionComponent->SetInteractInputAction(InteractAction);
 }
 
 void AInteractionPrototypeCharacter::DoStartFiring()

@@ -3,6 +3,7 @@
 
 #include "HUD/InteractionPrototypeHUD.h"
 
+#include "Interactable.h"
 #include "InteractionActorComponent.h"
 #include "InteractionPrototypeCharacter.h"
 #include "Weapon.h"
@@ -28,7 +29,8 @@ void AInteractionPrototypeHUD::BeginPlay()
 		AInteractionPrototypeCharacter* PlayerCharacter = Cast<AInteractionPrototypeCharacter>(PlayerController->GetPawn());
 		if (PlayerCharacter)
 		{
-			if (UInteractionActorComponent* InteractionComponent = PlayerCharacter->FindComponentByClass<UInteractionActorComponent>())
+			InteractionComponent = PlayerCharacter->FindComponentByClass<UInteractionActorComponent>();
+			if (InteractionComponent)
 			{
 				InteractionComponent->OnInteractableLookedAt.AddDynamic(this, &AInteractionPrototypeHUD::OnInteractableLookedAt);
 			}
@@ -44,7 +46,7 @@ void AInteractionPrototypeHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 	if (AInteractionPrototypeCharacter* PlayerCharacter = Cast<AInteractionPrototypeCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
 	{
-		if (UInteractionActorComponent* InteractionComponent = PlayerCharacter->FindComponentByClass<UInteractionActorComponent>())
+		if (InteractionComponent)
 		{
 			InteractionComponent->OnInteractableLookedAt.RemoveDynamic(this, &AInteractionPrototypeHUD::OnInteractableLookedAt);
 		}
@@ -64,7 +66,13 @@ void AInteractionPrototypeHUD::OnInteractableLookedAt(AActor* LookedAtActor)
 	IInteractable* InteractableActor = Cast<IInteractable>(LookedAtActor);
 	if (InteractableActor)
 	{
-		InteractionOverlay->SetInteractionText(FText::Format(INVTEXT("[E] {0}"), InteractableActor->GetInteractionPrompt()));
+		FKey InteractInputKey;
+		if (InteractionComponent)
+		{
+			InteractInputKey = InteractionComponent->GetCurrentInteractKey();
+		}
+
+		InteractionOverlay->SetInteractionText(FText::Format(INVTEXT("[{0}] {1}"), InteractInputKey.GetDisplayName(), InteractableActor->GetInteractionPrompt()));
 	}
 }
 

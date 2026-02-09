@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interactable.h"
 #include "GameFramework/HUD.h"
 #include "InteractionPrototypeHUD.generated.h"
 
+class UInteractionActorComponent;
 class AWeapon;
 class UInteractionOverlay;
 
@@ -21,6 +21,7 @@ private:
 
 	UInteractionOverlay* InteractionOverlay;
 	FDelegateHandle InteractableLookedAtDelegateHandle;
+	UInteractionActorComponent* InteractionComponent;
 
 protected:
 	virtual void BeginPlay() override;

@@ -3,20 +3,15 @@
 
 #include "InteractionPrototype/InteractionActorComponent.h"
 
+#include "EnhancedInputSubsystems.h"
 #include "Interactable.h"
 #include "InteractionPrototypeCharacter.h"
 #include "GameFramework/Character.h"
 
-// Sets default values for this component's properties
 UInteractionActorComponent::UInteractionActorComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
-
 
 // Called when the game starts
 void UInteractionActorComponent::BeginPlay()
@@ -34,6 +29,35 @@ void UInteractionActorComponent::BeginPlay()
 	}
 
 	OnInteractableLookedAt.Broadcast(LookAtInteractableActor);
+}
+
+FKey UInteractionActorComponent::GetKeyForInputAction(UInputAction* InputAction) const
+{
+	if (!InputAction)
+	{
+		return FKey();
+	}
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetOwner()->GetInstigatorController());
+	if (!PlayerController)
+	{
+		return FKey();
+	}
+
+	UEnhancedInputLocalPlayerSubsystem* EnhancedInputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+	if (!EnhancedInputSubsystem)
+	{
+		return FKey();
+	}
+
+	TArray<FKey> Keys = EnhancedInputSubsystem->QueryKeysMappedToAction(InputAction);
+
+	if (Keys.Num() > 0)
+	{
+		return Keys[0];
+	}
+
+	return FKey();
 }
 
 
@@ -57,7 +81,7 @@ void UInteractionActorComponent::TickComponent(float DeltaTime, ELevelTick TickT
 		}
 
 		LookAtInteractableActor = NewLookAtInteractableActor;
-		OnInteractableLookedAt.Broadcast(Cast<AActor>(LookAtInteractableActor));
+		OnInteractableLookedAt.Broadcast(LookAtInteractableActor);
 	}
 }
 
@@ -99,4 +123,9 @@ void UInteractionActorComponent::Interact()
 	}
 
 	IInteractable::Execute_Interact(Cast<UObject>(LookAtInteractable), Cast<AInteractionPrototypeCharacter>(GetOwner()));
+}
+
+FKey UInteractionActorComponent::GetCurrentInteractKey() const
+{
+	return GetKeyForInputAction(InteractInputAction);
 }
