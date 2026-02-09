@@ -7,6 +7,7 @@
 #include "WeaponHolder.h"
 #include "InteractionPrototypeCharacter.generated.h"
 
+class UInteractionActorComponent;
 class IInteractable;
 class APickup;
 class AWeaponPickup;
@@ -19,27 +20,20 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBulletCountUpdated, int32, Curre
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponEquipped, AWeapon*, CurrentWeapon);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableLookedAt, AActor*, LookedAtActor);
-
 UCLASS()
 class INTERACTIONSYSTEM_API AInteractionPrototypeCharacter : public AInteractionSystemCharacter, public IWeaponHolder
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(BlueprintAssignable, Category = Events)
 	FOnBulletCountUpdated OnBulletCountUpdated;
 	FOnWeaponEquipped OnWeaponEquipped;
-	FOnInteractableLookedAt OnInteractableLookedAt;
 
 protected:
-	/** Fire weapon input action */
 	UPROPERTY(EditAnywhere, Category ="Input")
 	UInputAction* FireAction;
 	UPROPERTY(EditDefaultsOnly, Category ="Input")
 	UInputAction* InteractAction;
-
-	IInteractable* LookAtInteractable;
 
 	/** Name of the first person mesh weapon socket */
 	UPROPERTY(EditAnywhere, Category ="Weapons")
@@ -48,14 +42,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category ="Aim", meta = (ClampMin = 0, ClampMax = 100000, Units = "cm"))
 	float MaxAimDistance = 10000.0f;
 
-	UPROPERTY(EditAnywhere, Category ="Pickup", meta = (ClampMin = 0, ClampMax = 100000, Units = "cm"))
-	float MaxPickupDistance = 300.0f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
+	UInteractionActorComponent* InteractionComponent;
 
 	/** Weapon currently equipped and ready to shoot with */
 	TObjectPtr<AWeapon> CurrentWeapon;
 
 public:
-	/** Constructor */
 	AInteractionPrototypeCharacter();
 
 	const TObjectPtr<AWeapon>& GetCurrentWeapon() const
@@ -64,23 +57,16 @@ public:
 	}
 
 protected:
-	/** Gameplay initialization */
 	virtual void BeginPlay() override;
 
-	virtual void Tick(float DeltaSeconds) override;
-
-	/** Gameplay cleanup */
 	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
-	/** Set up input action bindings */
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 public:
-	/** Handles start firing input */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void DoStartFiring();
 
-	/** Handles stop firing input */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void DoStopFiring();
 

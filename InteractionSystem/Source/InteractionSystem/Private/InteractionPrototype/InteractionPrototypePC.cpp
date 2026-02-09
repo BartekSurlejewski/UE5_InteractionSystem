@@ -40,8 +40,3 @@ void AInteractionPrototypePC::SetupInputComponent()
 		}
 	}
 }
-
-void AInteractionPrototypePC::OnBulletCountUpdated(int32 MagazineSize, int32 Bullets)
-{
-	return;
-}

@@ -3,6 +3,7 @@
 
 #include "HUD/InteractionPrototypeHUD.h"
 
+#include "InteractionActorComponent.h"
 #include "InteractionPrototypeCharacter.h"
 #include "Weapon.h"
 #include "Blueprint/UserWidget.h"
@@ -27,7 +28,10 @@ void AInteractionPrototypeHUD::BeginPlay()
 		AInteractionPrototypeCharacter* PlayerCharacter = Cast<AInteractionPrototypeCharacter>(PlayerController->GetPawn());
 		if (PlayerCharacter)
 		{
-			PlayerCharacter->OnInteractableLookedAt.AddDynamic(this, &AInteractionPrototypeHUD::OnInteractableLookedAt);
+			if (UInteractionActorComponent* InteractionComponent = PlayerCharacter->FindComponentByClass<UInteractionActorComponent>())
+			{
+				InteractionComponent->OnInteractableLookedAt.AddDynamic(this, &AInteractionPrototypeHUD::OnInteractableLookedAt);
+			}
 			PlayerCharacter->OnBulletCountUpdated.AddDynamic(this, &AInteractionPrototypeHUD::OnBulletCountChanged);
 			PlayerCharacter->OnWeaponEquipped.AddDynamic(this, &AInteractionPrototypeHUD::OnWeaponEquipped);
 		}
@@ -40,7 +44,10 @@ void AInteractionPrototypeHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 	if (AInteractionPrototypeCharacter* PlayerCharacter = Cast<AInteractionPrototypeCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
 	{
-		PlayerCharacter->OnInteractableLookedAt.RemoveDynamic(this, &AInteractionPrototypeHUD::OnInteractableLookedAt);
+		if (UInteractionActorComponent* InteractionComponent = PlayerCharacter->FindComponentByClass<UInteractionActorComponent>())
+		{
+			InteractionComponent->OnInteractableLookedAt.RemoveDynamic(this, &AInteractionPrototypeHUD::OnInteractableLookedAt);
+		}
 		PlayerCharacter->OnBulletCountUpdated.RemoveDynamic(this, &AInteractionPrototypeHUD::OnBulletCountChanged);
 		PlayerCharacter->OnWeaponEquipped.RemoveDynamic(this, &AInteractionPrototypeHUD::OnWeaponEquipped);
 	}

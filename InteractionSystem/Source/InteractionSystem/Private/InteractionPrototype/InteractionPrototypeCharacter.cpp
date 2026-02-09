@@ -12,43 +12,21 @@
 #include "Camera/CameraComponent.h"
 #include "TimerManager.h"
 #include "Interactable.h"
+#include "InteractionActorComponent.h"
 #include "WeaponPickup.h"
 
 AInteractionPrototypeCharacter::AInteractionPrototypeCharacter()
 {
-	// configure movement
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 600.0f, 0.0f);
+
+	InteractionComponent = CreateDefaultSubobject<UInteractionActorComponent>(TEXT("InteractionComponent"));
 }
 
 void AInteractionPrototypeCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OnInteractableLookedAt.Broadcast(Cast<AActor>(LookAtInteractable));
 	OnWeaponEquipped.Broadcast(CurrentWeapon);
-}
-
-void AInteractionPrototypeCharacter::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	IInteractable* NewLookAtInteractable = GetLookAtInteractable();
-
-	if (NewLookAtInteractable != LookAtInteractable)
-	{
-		if (LookAtInteractable)
-		{
-			IInteractable::Execute_SetHighlighted(Cast<UObject>(LookAtInteractable), false);
-		}
-
-		if (NewLookAtInteractable)
-		{
-			IInteractable::Execute_SetHighlighted(Cast<UObject>(NewLookAtInteractable), true);
-		}
-
-		LookAtInteractable = NewLookAtInteractable;
-		OnInteractableLookedAt.Broadcast(Cast<AActor>(LookAtInteractable));
-	}
 }
 
 void AInteractionPrototypeCharacter::EndPlay(EEndPlayReason::Type EndPlayReason)
@@ -173,7 +151,6 @@ void AInteractionPrototypeCharacter::DropWeapon(const FVector& Location)
 
 void AInteractionPrototypeCharacter::OnWeaponActivated(AWeapon* Weapon)
 {
-	// TODO: Add the OnBulletCountUpdated delegate
 	// update the bullet counter
 	OnWeaponEquipped.Broadcast(CurrentWeapon);
 	OnBulletCountUpdated.Broadcast(Weapon->GetMagazineSize(), Weapon->GetBulletCount());
@@ -193,30 +170,10 @@ void AInteractionPrototypeCharacter::OnSemiWeaponRefire()
 
 void AInteractionPrototypeCharacter::DoInteract()
 {
-	if (!LookAtInteractable)
+	if (!InteractionComponent)
 	{
 		return;
 	}
 
-	IInteractable::Execute_Interact(Cast<UObject>(LookAtInteractable), this);
-}
-
-IInteractable* AInteractionPrototypeCharacter::GetLookAtInteractable() const
-{
-	FHitResult HitResult;
-
-	const FVector Start = GetFirstPersonCameraComponent()->GetComponentLocation();
-	const FVector End = Start + (GetFirstPersonCameraComponent()->GetForwardVector() * MaxPickupDistance);
-
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this);
-
-	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
-
-	if (bHit)
-	{
-		return Cast<IInteractable>(HitResult.GetActor());
-	}
-
-	return nullptr;
+	InteractionComponent->Interact();
 }

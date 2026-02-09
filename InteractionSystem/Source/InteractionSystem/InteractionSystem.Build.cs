@@ -27,10 +27,7 @@ public class InteractionSystem : ModuleRules
 			"InteractionSystem",
 			"InteractionSystem/Public/InteractionPrototype",
 			"InteractionSystem/Public/Weapons",
-			"InteractionSystem/Variant_Shooter",
-			"InteractionSystem/Variant_Shooter/AI",
-			"InteractionSystem/Variant_Shooter/UI",
-			"InteractionSystem/Variant_Shooter/Weapons"
+			"InteractionSystem/Public/HUD",
 		});
 
 		// Uncomment if you are using Slate UI
