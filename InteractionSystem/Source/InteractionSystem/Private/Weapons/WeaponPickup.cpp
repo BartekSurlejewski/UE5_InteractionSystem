@@ -69,6 +69,7 @@ void AWeaponPickup::BeginPlay()
 	if (FWeaponTableRow* WeaponData = WeaponType.GetRow<FWeaponTableRow>(FString()))
 	{
 		// copy the weapon class
+		Mesh->SetStaticMesh(WeaponData->StaticMesh.LoadSynchronous());
 		InteractPrompt = WeaponData->InteractPrompt;
 		WeaponClass = WeaponData->WeaponClass;
 		WeaponPickupClass = WeaponData->WeaponPickupClass;

@@ -76,7 +76,6 @@ void AInteractionPrototypeCharacter::AttachWeaponMeshes(AWeapon* Weapon)
 
 	// attach the weapon meshes
 	Weapon->GetFirstPersonMesh()->AttachToComponent(GetFirstPersonMesh(), AttachmentRule, FirstPersonWeaponSocket);
-	Weapon->GetThirdPersonMesh()->AttachToComponent(GetMesh(), AttachmentRule, FirstPersonWeaponSocket);
 }
 
 void AInteractionPrototypeCharacter::PlayFiringMontage(UAnimMontage* Montage)

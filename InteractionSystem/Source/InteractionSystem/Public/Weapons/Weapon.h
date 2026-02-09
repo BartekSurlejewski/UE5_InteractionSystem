@@ -30,10 +30,6 @@ class INTERACTIONSYSTEM_API AWeapon : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* FirstPersonMesh;
 
-	/** Third person perspective mesh */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	USkeletalMeshComponent* ThirdPersonMesh;
-
 protected:
 	/** Cast pointer to the weapon owner */
 	IWeaponHolder* WeaponOwner;
@@ -123,6 +119,7 @@ public:
 	AWeapon();
 
 protected:
+	virtual void OnConstruction(const FTransform& Transform) override;
 	/** Gameplay initialization */
 	virtual void BeginPlay() override;
 
@@ -163,15 +160,13 @@ protected:
 	FTransform CalculateProjectileSpawnTransform(const FVector& TargetLocation) const;
 
 	void SetCurrentBullets(int newBulletsCount);
+	
+	void InitializeWeaponData();
 
 public:
 	/** Returns the first person mesh */
 	UFUNCTION(BlueprintPure, Category="Weapon")
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return FirstPersonMesh; };
-
-	/** Returns the third person mesh */
-	UFUNCTION(BlueprintPure, Category="Weapon")
-	USkeletalMeshComponent* GetThirdPersonMesh() const { return ThirdPersonMesh; };
 
 	UFUNCTION(BlueprintPure, Category="Pickup")
 	TSubclassOf<AWeaponPickup> GetWeaponPickupClass() const { return WeaponPickupClass; };

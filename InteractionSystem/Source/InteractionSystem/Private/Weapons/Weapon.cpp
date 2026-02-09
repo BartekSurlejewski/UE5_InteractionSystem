@@ -27,14 +27,21 @@ AWeapon::AWeapon()
 	FirstPersonMesh->SetCollisionProfileName(FName("NoCollision"));
 	FirstPersonMesh->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::FirstPerson);
 	FirstPersonMesh->bOnlyOwnerSee = true;
+}
 
-	// create the third person mesh
-	ThirdPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Third Person Mesh"));
-	ThirdPersonMesh->SetupAttachment(RootComponent);
+void AWeapon::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
 
-	ThirdPersonMesh->SetCollisionProfileName(FName("NoCollision"));
-	ThirdPersonMesh->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::WorldSpaceRepresentation);
-	ThirdPersonMesh->bOwnerNoSee = true;
+	if (FWeaponTableRow* WeaponData = WeaponType.GetRow<FWeaponTableRow>(FString()))
+	{
+		// copy the weapon class
+		DisplayName = WeaponData->DisplayName;
+		WeaponPickupClass = WeaponData->WeaponPickupClass;
+		FirstPersonMesh->SetSkeletalMesh(WeaponData->SkeletalMesh.LoadSynchronous());
+		ProjectileClass = WeaponData->ProjectileClass;
+		MagazineSize = WeaponData->MagazineSize;
+	}
 }
 
 void AWeapon::BeginPlay()
@@ -53,14 +60,16 @@ void AWeapon::BeginPlay()
 
 	// attach the meshes to the owner
 	WeaponOwner->AttachWeaponMeshes(this);
-	
-	if (FWeaponTableRow* WeaponData = WeaponType.GetRow<FWeaponTableRow>(FString()))
-	{
-		// copy the weapon class
-		DisplayName = WeaponData->DisplayName;
-		WeaponPickupClass = WeaponData->WeaponPickupClass;
-	}
-	
+
+	// if (FWeaponTableRow* WeaponData = WeaponType.GetRow<FWeaponTableRow>(FString()))
+	// {
+	// 	// copy the weapon class
+	// 	DisplayName = WeaponData->DisplayName;
+	// 	WeaponPickupClass = WeaponData->WeaponPickupClass;
+	// 	FirstPersonMesh->SetSkeletalMesh(WeaponData->SkeletalMesh.LoadSynchronous());
+	// 	ProjectileClass = WeaponData->ProjectileClass;
+	// 	MagazineSize = WeaponData->MagazineSize;
+	// }
 }
 
 void AWeapon::EndPlay(EEndPlayReason::Type EndPlayReason)
@@ -224,6 +233,11 @@ void AWeapon::SetCurrentBullets(int newBulletsCount)
 
 	// update the weapon HUD
 	WeaponOwner->UpdateWeaponHUD(CurrentBullets, MagazineSize);
+}
+
+void AWeapon::InitializeWeaponData()
+{
+	
 }
 
 const TSubclassOf<UAnimInstance>& AWeapon::GetFirstPersonAnimInstanceClass() const

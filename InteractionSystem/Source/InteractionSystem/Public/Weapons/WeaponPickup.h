@@ -9,9 +9,8 @@
 class USphereComponent;
 class AWeaponPickup;
 class AWeapon;
-/**
- *  Holds information about a type of weapon pickup
- */
+class AProjectile;
+
 USTRUCT(BlueprintType)
 struct FWeaponTableRow : public FTableRowBase
 {
@@ -23,9 +22,16 @@ struct FWeaponTableRow : public FTableRowBase
 	UPROPERTY(EditAnywhere)
 	FText InteractPrompt;
 
+	UPROPERTY(EditAnywhere)
+	uint32 MagazineSize = 10;
+	
 	/** Mesh to display on the pickup */
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<UStaticMesh> StaticMesh;
+
+	/** Mesh to display on the weapon */
+	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<USkeletalMesh> SkeletalMesh;
 
 	/** Weapon class to grant on pickup */
 	UPROPERTY(EditAnywhere)
@@ -34,6 +40,9 @@ struct FWeaponTableRow : public FTableRowBase
 	// Weapon pickup class to spawn when throwing a weapon away
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AWeaponPickup> WeaponPickupClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AProjectile> ProjectileClass;
 };
 
 UCLASS(Abstract)
