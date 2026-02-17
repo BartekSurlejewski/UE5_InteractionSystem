@@ -31,9 +31,9 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, Category ="Input")
-	UInputAction* FireAction;
+	TObjectPtr<UInputAction> FireAction;
 	UPROPERTY(EditDefaultsOnly, Category ="Input")
-	UInputAction* InteractAction;
+	TObjectPtr<UInputAction> InteractAction;
 
 	/** Name of the first person mesh weapon socket */
 	UPROPERTY(EditAnywhere, Category ="Weapons")
@@ -43,9 +43,10 @@ protected:
 	float MaxAimDistance = 10000.0f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Components)
-	UInteractionActorComponent* InteractionComponent;
+	TObjectPtr<UInteractionActorComponent> InteractionComponent;
 
 	/** Weapon currently equipped and ready to shoot with */
+	UPROPERTY()
 	TObjectPtr<AWeapon> CurrentWeapon;
 
 public:
@@ -106,5 +107,4 @@ public:
 
 protected:
 	void DoInteract();
-	IInteractable* GetLookAtInteractable() const;
 };

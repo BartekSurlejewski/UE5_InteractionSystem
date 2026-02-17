@@ -23,16 +23,16 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	FKey GetKeyForInputAction(UInputAction* InputAction) const;
+	FKey GetKeyForInputAction(TObjectPtr<UInputAction> InputAction) const;
 
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	AActor* GetLookAtInteractableActor() const;
+	TObjectPtr<AActor> GetLookAtInteractableActor() const;
 	void Interact();
 
 	FKey GetCurrentInteractKey() const;
 
-	void SetInteractInputAction(UInputAction* NewInteractInputAction)
+	void SetInteractInputAction(TObjectPtr<UInputAction> NewInteractInputAction)
 	{
 		if (NewInteractInputAction != InteractInputAction)
 		{
@@ -48,7 +48,7 @@ private:
 
 	UPROPERTY()
 	UCameraComponent* CachedCamera;
-	AActor* LookAtInteractableActor;
-	UInputAction* InteractInputAction;
+	TObjectPtr<AActor>  LookAtInteractableActor;
+	TObjectPtr<UInputAction>  InteractInputAction;
 	FKey InteractInputKey;
 };

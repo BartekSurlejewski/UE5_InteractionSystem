@@ -51,11 +51,11 @@ class INTERACTIONSYSTEM_API AWeaponPickup : public AActor, public IInteractable
 	GENERATED_BODY()
 	/** Weapon pickup mesh. Its mesh asset is set from the weapon data table */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* Mesh;
+	TObjectPtr<UStaticMeshComponent> Mesh;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	USphereComponent* SphereCollision;
+	TObjectPtr<USphereComponent> SphereCollision;
 
 	UPROPERTY(EditAnywhere, Category="Pickup")
 	FText InteractPrompt;

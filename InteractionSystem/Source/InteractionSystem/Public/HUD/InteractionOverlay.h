@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "InteractionOverlay.generated.h"
 
+class UTextBlock;
+
 UCLASS()
 class INTERACTIONSYSTEM_API UInteractionOverlay : public UUserWidget
 {
@@ -19,9 +21,9 @@ public:
 
 private:
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* InteractionText;
+	TObjectPtr<UTextBlock> InteractionText;
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* GunNameText;
+	TObjectPtr<UTextBlock> GunNameText;
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* AmmoCountText;
+	TObjectPtr<UTextBlock> AmmoCountText;
 };

@@ -31,7 +31,7 @@ void UInteractionActorComponent::BeginPlay()
 	OnInteractableLookedAt.Broadcast(LookAtInteractableActor);
 }
 
-FKey UInteractionActorComponent::GetKeyForInputAction(UInputAction* InputAction) const
+FKey UInteractionActorComponent::GetKeyForInputAction(TObjectPtr<UInputAction> InputAction) const
 {
 	if (!InputAction)
 	{
@@ -50,7 +50,7 @@ FKey UInteractionActorComponent::GetKeyForInputAction(UInputAction* InputAction)
 		return FKey();
 	}
 
-	TArray<FKey> Keys = EnhancedInputSubsystem->QueryKeysMappedToAction(InputAction);
+	TArray<FKey> Keys = EnhancedInputSubsystem->QueryKeysMappedToAction(InputAction.Get());
 
 	if (Keys.Num() > 0)
 	{
@@ -84,7 +84,7 @@ void UInteractionActorComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	}
 }
 
-AActor* UInteractionActorComponent::GetLookAtInteractableActor() const
+TObjectPtr<AActor> UInteractionActorComponent::GetLookAtInteractableActor() const
 {
 	FHitResult HitResult;
 
